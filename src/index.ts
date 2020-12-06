@@ -14,6 +14,8 @@ import * as dotenv from 'dotenv'
 
 import * as readline from 'readline'
 
+import handleReply from './handleReply'
+
 dotenv.config()
 
 const config: Config = {
@@ -38,14 +40,19 @@ app.post('/callback', middleware(<MiddlewareConfig>config), (req, res) => {
     })
 })
 // event handler
-function handleEvent(event: WebhookEvent) {
+async function handleEvent(event: WebhookEvent) {
   if (event.type !== 'message' || event.message.type !== 'text') {
     // ignore non-text-message event
     return Promise.resolve(null)
   }
   console.log(`Received message: ${event.message.text}`)
   // create a echoing text message
-  const echo: TextMessage = { type: 'text', text: event.message.text }
+  const reply = await handleReply(event.message.text)
+
+  const echo: TextMessage = {
+    type: 'text',
+    text: reply,
+  }
   // use reply API
   return client.replyMessage(event.replyToken, echo)
 }
@@ -56,8 +63,9 @@ const rl = readline.createInterface({
 })
 
 function test() {
-  rl.question('Message:', (answer): void => {
-    console.log('response:' + answer)
+  rl.question('Message:', async (message) => {
+    const reply = await handleReply(message)
+    console.log('response:' + reply)
     test()
   })
 }
