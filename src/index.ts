@@ -12,6 +12,8 @@ import express = require('express')
 
 import * as dotenv from 'dotenv'
 
+import * as readline from 'readline'
+
 dotenv.config()
 
 const config: Config = {
@@ -47,8 +49,27 @@ function handleEvent(event: WebhookEvent) {
   // use reply API
   return client.replyMessage(event.replyToken, echo)
 }
-// listen on port
-const port = process.env.PORT || 3000
-app.listen(port, () => {
-  console.log(`listening on ${port}`)
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
 })
+
+function test() {
+  rl.question('Message:', (answer): void => {
+    console.log('response:' + answer)
+    test()
+  })
+}
+
+async function init() {
+  // listen on port
+  const port = process.env.PORT || 3000
+  await app.listen(port, () => {
+    console.log(`listening on ${port}`)
+  })
+
+  test()
+}
+
+init()
