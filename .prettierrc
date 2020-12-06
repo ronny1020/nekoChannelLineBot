@@ -2,5 +2,6 @@
   "semi": false,
   "singleQuote": true,
   "tabWidth": 2,
-  "tabs": false
+  "tabs": false,
+  "endOfLine": "auto"
 }
