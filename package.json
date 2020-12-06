@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon",
+    "start": "node build",
+    "dev": "nodemon",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src/** --fix"
@@ -27,7 +28,9 @@
   },
   "dependencies": {
     "@line/bot-sdk": "^7.1.0",
-    "express": "^4.17.1"
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "prompts": "^2.4.0"
   },
   "husky": {
     "hooks": {

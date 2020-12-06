@@ -10,8 +10,14 @@ import {
 
 import express = require('express')
 
+import * as dotenv from 'dotenv'
+
+dotenv.config()
+
 const config: Config = {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN!,
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   channelSecret: process.env.LINE_CHANNEL_SECRET!,
 }
 // create LINE SDK client
