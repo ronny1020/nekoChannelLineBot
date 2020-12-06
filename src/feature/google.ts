@@ -3,5 +3,5 @@ export default async function google(message: string): Promise<string> {
     return 'https://www.google.com/search?q=' + message.substr(7)
   }
 
-  return message
+  return ''
 }
