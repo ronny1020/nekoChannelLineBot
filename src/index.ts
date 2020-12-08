@@ -5,7 +5,7 @@ import {
   middleware,
   MiddlewareConfig,
   WebhookEvent,
-  TextMessage,
+  Message,
 } from '@line/bot-sdk'
 
 import express = require('express')
@@ -47,13 +47,11 @@ async function handleEvent(event: WebhookEvent) {
   }
   console.log(`Received message: ${event.message.text}`)
   // create a echoing text message
-  const reply = await handleReply(event.message.text)
 
-  const echo: TextMessage = {
-    type: 'text',
-    text: reply,
-  }
+  const echo: Message | null = await handleReply(event.message.text)
+
   // use reply API
+  if (!echo) return Promise.resolve(null)
   return client.replyMessage(event.replyToken, echo)
 }
 
@@ -64,8 +62,8 @@ const rl = readline.createInterface({
 
 function test() {
   rl.question('Message:', async (message) => {
-    const reply = await handleReply(message)
-    console.log('response:' + reply)
+    const echo: Message | null = await handleReply(message)
+    console.log(echo)
     test()
   })
 }
