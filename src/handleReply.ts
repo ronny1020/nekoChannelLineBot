@@ -3,12 +3,17 @@ import { Message, TextMessage, ImageMessage } from '@line/bot-sdk'
 import google from './feature/google'
 import weather from './feature/weather'
 import postImage from './feature/postImage'
+import translate from './feature/translate'
 
 export default async function handleReply(
   message: string
 ): Promise<Message | null> {
   message = message.trim()
-  const text: string = (await google(message)) || (await weather(message)) || ''
+  const text: string =
+    (await google(message)) ||
+    (await weather(message)) ||
+    (await translate(message)) ||
+    ''
 
   if (text) {
     const textMessage: TextMessage = {
