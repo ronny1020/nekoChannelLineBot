@@ -9,6 +9,7 @@ import {
 } from '@line/bot-sdk'
 
 import express = require('express')
+import mongoose, { connect } from 'mongoose'
 
 import * as dotenv from 'dotenv'
 
@@ -71,9 +72,24 @@ function test() {
 async function init() {
   // listen on port
   const port = process.env.PORT || 3000
-  await app.listen(port, () => {
+  app.listen(port, () => {
     console.log(`listening on ${port}`)
   })
+
+  // connect to mongoDB
+  const url = process.env.MONGO_DB_URL || ''
+
+  await mongoose
+    .connect(url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => console.log('MongoDB has connected'))
+    .catch((e) => console.error(e))
+
+  const db = mongoose.connection
+
+  db.on('error', console.error.bind(console, 'connection error:'))
 
   test()
 }
