@@ -9,7 +9,7 @@ import {
 } from '@line/bot-sdk'
 
 import express = require('express')
-import mongoose, { connect } from 'mongoose'
+import mongoose from 'mongoose'
 
 import * as dotenv from 'dotenv'
 

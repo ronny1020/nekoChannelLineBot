@@ -1,6 +1,7 @@
-import mongoose from 'mongoose'
+import mongoose, { Schema, Model } from 'mongoose'
+import { Meme } from '../interface'
 
-const MemeSchema = new mongoose.Schema({
+const MemeSchema: Schema = new mongoose.Schema({
   imageUrl: {
     type: String,
     required: true,
@@ -11,4 +12,4 @@ const MemeSchema = new mongoose.Schema({
   },
 })
 
-export const Memes = mongoose.model('Meme', MemeSchema)
+export const MemeModels: Model<Meme> = mongoose.model('Meme', MemeSchema)
