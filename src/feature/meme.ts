@@ -33,7 +33,7 @@ export default async function meme(
     if (message.includes('http')) {
       for (const extension of filenameExtensionList) {
         const indexOfHttp = message.indexOf('http')
-        const keyword = message.substring(2, indexOfHttp)
+        const keyword = message.substring(2, indexOfHttp).trim()
 
         // check if keyword has created before
         const allKeyWords = await findAllKeywords()
