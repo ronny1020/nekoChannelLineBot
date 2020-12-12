@@ -48,7 +48,7 @@ async function handleEvent(event: WebhookEvent) {
   console.log(`Received message: ${event.message.text}`)
   // create a echoing text message
 
-  const echo: Message | null = await handleReply(event.message.text)
+  const echo: Message | undefined = await handleReply(event.message.text)
 
   // use reply API
   if (!echo) return Promise.resolve(null)
@@ -62,7 +62,7 @@ const rl = readline.createInterface({
 
 function test() {
   rl.question('Message:', async (message) => {
-    const echo: Message | null = await handleReply(message)
+    const echo: Message | undefined = await handleReply(message)
     console.log(echo)
     test()
   })

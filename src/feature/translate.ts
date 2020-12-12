@@ -1,6 +1,10 @@
 import axios from 'axios'
+import { TextMessage } from '@line/bot-sdk'
+import { createTextMessage } from '../tool/createMessage'
 
-export default async function translate(message: string): Promise<string> {
+export default async function translate(
+  message: string
+): Promise<TextMessage | undefined> {
   if (message.startsWith('翻譯')) {
     let lang
     let langCode
@@ -38,7 +42,7 @@ export default async function translate(message: string): Promise<string> {
       )}`
     )
 
-    return data[0][0][0]
+    return createTextMessage(data[0][0][0])
   }
-  return ''
+  return
 }
