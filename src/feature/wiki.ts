@@ -10,7 +10,7 @@ export default async function wiki(
 ): Promise<TextMessage | undefined> {
   if (message.substr(0, 4).toLowerCase() === 'wiki') {
     const keyword = message.substring(4).trim()
-    const wikiUrl = `https://zh.wikipedia.org/wiki/${keyword}`
+    const wikiUrl = `https://zh.wikipedia.org/wiki/${encodeURI(keyword)}`
 
     try {
       const { data } = await axios.request({
