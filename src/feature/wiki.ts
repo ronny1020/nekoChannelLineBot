@@ -29,7 +29,13 @@ export default async function wiki(
         elements.index($('p')),
         elements.index($('.toc'))
       )
-      const messageText = selectedElements.text() + '\n' + wikiUrl
+      const messageText =
+        selectedElements
+          .text()
+          .replace(/\[\d*\]/g, '')
+          .trim() +
+        '\n\n' +
+        wikiUrl
 
       return createTextMessage(messageText)
     } catch (error) {
