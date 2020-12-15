@@ -2,6 +2,7 @@ import { TextMessage, ImageMessage } from '@line/bot-sdk'
 import { createTextMessage, createImageMessage } from '../tool/createMessage'
 import { MemeModels } from '../models/MemeModels'
 import { Meme } from '../interface'
+import axios from 'axios'
 
 let memes: Meme[] | undefined
 
@@ -62,9 +63,16 @@ export default async function meme(
             message.lastIndexOf(extension) + extension.length
           )
           console.log(imageUrl)
+          try {
+            const { data } = await axios.request({
+              url: imageUrl,
+              method: 'get',
+            })
+          } catch {
+            return createTextMessage(`網址 ${imageUrl} 錯誤，無法取得圖片。`)
+          }
 
           for (const meme of await getMemes()) {
-            console.log(meme.imageUrl)
             if (meme.imageUrl === imageUrl) {
               const result = await MemeModels.findByIdAndUpdate(meme._id, {
                 $push: { keywords: keyword },
