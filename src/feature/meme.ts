@@ -35,6 +35,20 @@ export default async function meme(
         const indexOfHttp = message.indexOf('http')
         const keyword = message.substring(2, indexOfHttp).trim()
 
+        const prohibitWords = [
+          'google',
+          'wiki',
+          'weather',
+          '天氣',
+          '台北',
+          '翻譯',
+        ]
+        if (prohibitWords.includes(keyword.toLocaleLowerCase()))
+          return createTextMessage('關鍵字含有保留字')
+
+        if (keyword.includes(' '))
+          return createTextMessage('請勿同時輸入複數關鍵字')
+
         // check if keyword has created before
         const allKeyWords = await findAllKeywords()
         if (allKeyWords.includes(keyword)) {
