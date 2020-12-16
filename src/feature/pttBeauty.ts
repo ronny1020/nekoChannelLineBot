@@ -1,6 +1,11 @@
 import axios from 'axios'
 
-import { TextMessage } from '@line/bot-sdk'
+import {
+  FlexBubble,
+  FlexCarousel,
+  FlexMessage,
+  TextMessage,
+} from '@line/bot-sdk'
 
 import { createTextMessage } from '../tool/createMessage'
 
@@ -51,10 +56,11 @@ async function getArticleUrlList(pageNumber: number): Promise<string[]> {
   return list
 }
 
+// main
 export default async function pttBeauty(
   message: string
-): Promise<TextMessage | undefined> {
-  if (message === 'b') {
+): Promise<FlexMessage | TextMessage | undefined> {
+  if (message === '表特') {
     const pttBeautyRootUrl = 'https://www.ptt.cc/bbs/Beauty/index.html'
 
     const rootPageData = await getPageDataFromPttUrl(pttBeautyRootUrl)
@@ -72,18 +78,17 @@ export default async function pttBeauty(
     let articleUrlList = await getArticleUrlList(randomPageNumber)
 
     let imageList: string[] = []
-    let index
+    let index = Math.floor(Math.random() * articleUrlList.length)
     let maxRetryTimes = 10
 
     while (!imageList.length && articleUrlList.length && maxRetryTimes) {
-      index = Math.floor(Math.random() * articleUrlList.length)
-
       imageList = await getImageUrlList(
         `https://www.ptt.cc/bbs/Beauty/${articleUrlList[index]}.html`
       )
 
       if (!imageList.length) {
         articleUrlList.splice(index, 0)
+        index = Math.floor(Math.random() * articleUrlList.length)
       }
       if (!articleUrlList.length) {
         randomPageNumber--
@@ -93,9 +98,42 @@ export default async function pttBeauty(
     }
 
     if (maxRetryTimes === 0) return createTextMessage('達最高重試次數')
-    console.log(imageList)
 
-    return createTextMessage('b')
+    if (imageList.length > 12) imageList.length = 12
+
+    const contents: FlexBubble[] = imageList.map((url) => ({
+      type: 'bubble',
+      body: {
+        type: 'box',
+        layout: 'vertical',
+        contents: [
+          {
+            type: 'image',
+            url,
+            size: 'full',
+            aspectMode: 'cover',
+            aspectRatio: '9:16',
+            gravity: 'top',
+          },
+        ],
+        paddingAll: '0px',
+      },
+      action: {
+        type: 'uri',
+        label: 'action',
+        uri: `https://www.ptt.cc/bbs/Beauty/${articleUrlList[index]}.html`,
+      },
+    }))
+
+    const flexContainer: FlexCarousel = { type: 'carousel', contents }
+
+    const flexMessage: FlexMessage = {
+      type: 'flex',
+      altText: 'FlexMessage',
+      contents: flexContainer,
+    }
+
+    return flexMessage
   }
   return
 }
