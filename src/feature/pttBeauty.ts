@@ -42,7 +42,7 @@ async function getImageUrlList(url: string): Promise<string[]> {
 
 async function getArticleUrlList(pageNumber: number): Promise<string[]> {
   const randomPageData = await getPageDataFromPttUrl(
-    `https://www.ptt.cc/bbs/Beauty/index${pageNumber}.html`
+    `https://www.ptt.cc/bbs/Beauty/search?page=${pageNumber}&q=recommend%3A50`
   )
   if (!randomPageData) return []
 
@@ -61,21 +61,9 @@ export default async function pttBeauty(
   message: string
 ): Promise<FlexMessage | TextMessage | undefined> {
   if (message === '表特') {
-    const pttBeautyRootUrl = 'https://www.ptt.cc/bbs/Beauty/index.html'
+    let pageNumber = 1 + Math.round(Math.random() * 100)
 
-    const rootPageData = await getPageDataFromPttUrl(pttBeautyRootUrl)
-
-    if (!rootPageData) return createTextMessage('ptt 連線錯誤')
-
-    const previousPageUrl = rootPageData.match(
-      /(\/bbs\/Beauty\/index)([0-9]{4})(\.html)/g
-    )
-    if (!previousPageUrl) return createTextMessage('ptt 連線錯誤')
-
-    const pageNumber = Number(previousPageUrl[0].substr(17, 4))
-    let randomPageNumber = pageNumber + 1 - Math.round(Math.random() * 500)
-
-    let articleUrlList = await getArticleUrlList(randomPageNumber)
+    let articleUrlList = await getArticleUrlList(pageNumber)
 
     let imageList: string[] = []
     let index = Math.floor(Math.random() * articleUrlList.length)
@@ -91,8 +79,8 @@ export default async function pttBeauty(
         index = Math.floor(Math.random() * articleUrlList.length)
       }
       if (!articleUrlList.length) {
-        randomPageNumber--
-        articleUrlList = await getArticleUrlList(randomPageNumber)
+        pageNumber++
+        articleUrlList = await getArticleUrlList(pageNumber)
       }
       maxRetryTimes--
     }
