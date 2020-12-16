@@ -11,6 +11,8 @@ import pttBeauty from './feature/pttBeauty'
 export default async function handleReply(
   message: string
 ): Promise<Message | undefined> {
+  message = message.trim()
+
   return (
     (await google(message)) ||
     (await wiki(message)) ||
@@ -18,6 +20,7 @@ export default async function handleReply(
     (await translate(message)) ||
     (await postImage(message)) ||
     (await pttBeauty(message)) ||
+    // meme must be the last one
     (await meme(message)) ||
     undefined
   )
