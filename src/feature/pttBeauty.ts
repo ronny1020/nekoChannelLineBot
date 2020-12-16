@@ -67,7 +67,7 @@ export default async function pttBeauty(
     if (!previousPageUrl) return createTextMessage('ptt 連線錯誤')
 
     const pageNumber = Number(previousPageUrl[0].substr(17, 4))
-    const randomPageNumber = pageNumber + 1 - Math.round(Math.random() * 500)
+    let randomPageNumber = pageNumber + 1 - Math.round(Math.random() * 500)
 
     let articleUrlList = await getArticleUrlList(randomPageNumber)
 
@@ -86,6 +86,7 @@ export default async function pttBeauty(
         articleUrlList.splice(index, 0)
       }
       if (!articleUrlList.length) {
+        randomPageNumber--
         articleUrlList = await getArticleUrlList(randomPageNumber)
       }
       maxRetryTimes--
