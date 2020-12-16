@@ -6,6 +6,7 @@ import weather from './feature/weather'
 import postImage from './feature/postImage'
 import translate from './feature/translate'
 import meme from './feature/meme'
+import pttBeauty from './feature/pttBeauty'
 
 export default async function handleReply(
   message: string
@@ -16,6 +17,7 @@ export default async function handleReply(
     (await weather(message)) ||
     (await translate(message)) ||
     (await postImage(message)) ||
+    (await pttBeauty(message)) ||
     (await meme(message)) ||
     undefined
   )

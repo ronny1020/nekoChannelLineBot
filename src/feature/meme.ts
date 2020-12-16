@@ -43,6 +43,7 @@ export default async function meme(
           '天氣',
           '台北',
           '翻譯',
+          '表特',
         ]
         if (prohibitWords.includes(keyword.toLocaleLowerCase()))
           return createTextMessage('關鍵字含有保留字')
@@ -64,7 +65,7 @@ export default async function meme(
           )
           console.log(imageUrl)
           try {
-            const { data } = await axios.request({
+            await axios.request({
               url: imageUrl,
               method: 'get',
             })
