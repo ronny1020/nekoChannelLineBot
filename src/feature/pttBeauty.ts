@@ -29,14 +29,14 @@ async function getImageUrlList(url: string): Promise<string[]> {
 
   if (!data) return []
 
-  const imageLinkRegexp = /(http)?s?:?(\/\/[^"'\n]*\.(?:png|jpg|jpeg))/g
+  const imageLinkRegexp = /(https:\/\/)([^"'\n]*\.(?:png|jpg|jpeg))/g
 
   const imagesUrlList = data.match(imageLinkRegexp)
 
   if (!imagesUrlList) return []
 
   return imagesUrlList.filter(
-    (link, index) => imagesUrlList.indexOf(link) === index
+    (link, index, self) => self.indexOf(link) === index
   )
 }
 
@@ -88,6 +88,7 @@ export default async function pttBeauty(
     if (maxRetryTimes === 0) return createTextMessage('達最高重試次數')
 
     if (imageList.length > 12) imageList.length = 12
+    console.log(imageList)
 
     const contents: FlexBubble[] = imageList.map((url) => ({
       type: 'bubble',
