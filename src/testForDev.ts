@@ -1,6 +1,6 @@
 import { Message } from '@line/bot-sdk'
-import handleReply from './handleReply'
 import * as readline from 'readline'
+import handleReply from './handleReply'
 
 const rl = readline.createInterface({
   input: process.stdin,

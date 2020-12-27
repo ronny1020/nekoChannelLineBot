@@ -1,19 +1,17 @@
 import { middleware, MiddlewareConfig } from '@line/bot-sdk'
-
-import express = require('express')
 import { graphqlHTTP } from 'express-graphql'
-
-import { connectToMongo } from './mongo'
+import express from 'express'
 import handleEvent, { config } from './handleEvent'
 import testForDev from './testForDev'
 import { root, schema } from './GraphQL'
+import connectToMongo from './mongo'
 
 const app = express()
 
 app.use(
   '/graphql',
   graphqlHTTP({
-    schema: schema,
+    schema,
     rootValue: root,
     graphiql: true,
   })

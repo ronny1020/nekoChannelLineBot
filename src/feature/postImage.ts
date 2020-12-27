@@ -8,17 +8,19 @@ export default async function postImage(
   const filenameExtensionList: string[] = ['jpg', 'jpeg', 'png']
 
   if (message.includes('http') && !message.startsWith('新增')) {
-    for (const extension of filenameExtensionList) {
-      if (lowerCaseMessage.includes(extension)) {
-        return createImageMessage(
-          message.substring(
-            message.indexOf('http'),
-            message.lastIndexOf(extension) + extension.length
+    return filenameExtensionList
+      .map((extension) => {
+        if (lowerCaseMessage.includes(extension)) {
+          return createImageMessage(
+            message.substring(
+              message.indexOf('http'),
+              message.lastIndexOf(extension) + extension.length
+            )
           )
-        )
-      }
-    }
+        }
+        return undefined
+      })
+      .filter((a) => a)[0]
   }
-
-  return
+  return undefined
 }

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-export async function connectToMongo() {
+export default async function connectToMongo() {
   const url = process.env.MONGO_DB_URL || ''
 
   await mongoose

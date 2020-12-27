@@ -21,6 +21,5 @@ export default async function weather(
 相對濕度 ${data.main.humidity} %
 能見度     ${data.visibility} 公尺`)
   }
-
-  return
+  return undefined
 }

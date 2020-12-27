@@ -5,9 +5,8 @@ import {
   Message,
   WebhookEvent,
 } from '@line/bot-sdk'
-import handleReply from './handleReply'
-
 import * as dotenv from 'dotenv'
+import handleReply from './handleReply'
 
 dotenv.config()
 

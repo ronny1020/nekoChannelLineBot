@@ -1,5 +1,5 @@
 import { buildSchema } from 'graphql'
-import { MemeModels } from './models/MemeModels'
+import MemeModels from './models/MemeModels'
 
 export const schema = buildSchema(`
   type Query {

@@ -1,12 +1,13 @@
+/* eslint-disable no-await-in-loop */
 import { TextMessage, ImageMessage } from '@line/bot-sdk'
-import { createTextMessage, createImageMessage } from '../tool/createMessage'
-import { MemeModels } from '../models/MemeModels'
-import { Meme } from '../interface'
 import axios from 'axios'
+import { createTextMessage, createImageMessage } from '../tool/createMessage'
+import MemeModels from '../models/MemeModels'
+import { Meme } from '../interface'
 
 let memes: Meme[] | undefined
 
-async function getMemes(): Promise<Meme[]> {
+async function getMemes(): Promise<Meme[] | undefined> {
   if (!memes) {
     memes = await MemeModels.find({})
   }
@@ -17,9 +18,12 @@ async function getMemes(): Promise<Meme[]> {
 async function findAllKeywords(): Promise<string[]> {
   let allKeyWords: string[] = []
 
-  for (const meme of await getMemes()) {
-    allKeyWords = [...allKeyWords, ...meme.keywords]
-  }
+  const items = await getMemes()
+
+  if (items)
+    items.forEach((item) => {
+      allKeyWords = [...allKeyWords, ...item.keywords]
+    })
 
   return allKeyWords
 }
@@ -32,7 +36,8 @@ export default async function meme(
     const filenameExtensionList: string[] = ['jpg', 'jpeg', 'png']
 
     if (message.includes('http')) {
-      for (const extension of filenameExtensionList) {
+      for (let i = 0; i < filenameExtensionList.length; i++) {
+        const extension = filenameExtensionList[i]
         const indexOfHttp = message.indexOf('http')
         const keyword = message.substring(2, indexOfHttp).trim()
 
@@ -59,23 +64,27 @@ export default async function meme(
 
         if (lowerCaseMessage.includes(extension)) {
           // check if imageUrl has created before
-          const imageUrl = message.substring(
+          const messageImageUrl = message.substring(
             indexOfHttp,
             message.lastIndexOf(extension) + extension.length
           )
-          console.log(imageUrl)
+
           try {
             await axios.request({
-              url: imageUrl,
+              url: messageImageUrl,
               method: 'get',
             })
           } catch {
-            return createTextMessage(`網址 ${imageUrl} 錯誤，無法取得圖片。`)
+            return createTextMessage(
+              `網址 ${messageImageUrl} 錯誤，無法取得圖片。`
+            )
           }
 
-          for (const meme of await getMemes()) {
-            if (meme.imageUrl === imageUrl) {
-              const result = await MemeModels.findByIdAndUpdate(meme._id, {
+          const memeList = (await getMemes()) || []
+          for (let j = 0; j < memeList.length; j++) {
+            const { imageUrl, id } = memeList[j]
+            if (imageUrl === messageImageUrl) {
+              const result = await MemeModels.findByIdAndUpdate(id, {
                 $push: { keywords: keyword },
               })
               if (result) {
@@ -83,34 +92,38 @@ export default async function meme(
                 return createTextMessage(
                   `已增加關鍵字 ${keyword} 至 ${imageUrl}`
                 )
-              } else {
-                return createTextMessage(`新增失敗`)
               }
+              return createTextMessage(`新增失敗`)
             }
           }
 
-          //add keyboard
-          const meme = new MemeModels({ imageUrl, keywords: [keyword] })
-          const result = await meme.save()
+          // add keyboard
+          const memeModel = new MemeModels({
+            messageImageUrl,
+            keywords: [keyword],
+          })
+          const result = await memeModel.save()
           if (result) {
             memes = await MemeModels.find({})
-            return createTextMessage(`已增加新 MEME ${keyword}:${imageUrl}`)
-          } else {
-            return createTextMessage(`新增失敗`)
+            return createTextMessage(
+              `已增加新 MEME ${keyword}:${messageImageUrl}`
+            )
           }
+          return createTextMessage(`新增失敗`)
         }
       }
     }
   }
 
-  //get meme
-  for (const meme of await getMemes()) {
-    for (const keyword of meme.keywords) {
-      if (keyword === message) {
-        return createImageMessage(meme.imageUrl)
+  // get meme
+  const memeList = (await getMemes()) || []
+  for (let i = 0; i < memeList.length; i++) {
+    const { keywords } = memeList[i]
+    for (let j = 0; j < keywords.length; j++) {
+      if (keywords[j] === message) {
+        return createImageMessage(memeList[i].imageUrl)
       }
     }
   }
-
-  return
+  return undefined
 }

@@ -4,6 +4,7 @@
     "es2021": true
   },
   "extends": [
+    "airbnb-typescript/base",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier/@typescript-eslint",
@@ -17,9 +18,11 @@
   },
   "plugins": ["@typescript-eslint/eslint-plugin"],
   "rules": {
+    "no-console": "off",
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
   }
 }

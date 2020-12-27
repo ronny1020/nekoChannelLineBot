@@ -12,7 +12,7 @@ import { createTextMessage } from '../tool/createMessage'
 async function getPageDataFromPttUrl(url: string): Promise<string | null> {
   try {
     const { data } = await axios.request({
-      url: url,
+      url,
       method: 'get',
       headers: {
         Cookie: 'over18=1',
@@ -70,6 +70,7 @@ export default async function pttBeauty(
     let maxRetryTimes = 10
 
     while (!imageList.length && articleUrlList.length && maxRetryTimes) {
+      // eslint-disable-next-line no-await-in-loop
       imageList = await getImageUrlList(
         `https://www.ptt.cc/bbs/Beauty/${articleUrlList[index]}.html`
       )
@@ -79,16 +80,16 @@ export default async function pttBeauty(
         index = Math.floor(Math.random() * articleUrlList.length)
       }
       if (!articleUrlList.length) {
-        pageNumber++
+        pageNumber += 1
+        // eslint-disable-next-line no-await-in-loop
         articleUrlList = await getArticleUrlList(pageNumber)
       }
-      maxRetryTimes--
+      maxRetryTimes -= 1
     }
 
     if (maxRetryTimes === 0) return createTextMessage('達最高重試次數')
 
     if (imageList.length > 12) imageList.length = 12
-    console.log(imageList)
 
     const contents: FlexBubble[] = imageList.map((url) => ({
       type: 'bubble',
@@ -124,5 +125,5 @@ export default async function pttBeauty(
 
     return flexMessage
   }
-  return
+  return undefined
 }

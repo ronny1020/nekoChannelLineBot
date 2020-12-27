@@ -44,5 +44,6 @@ export default async function translate(
 
     return createTextMessage(data[0][0][0])
   }
-  return
+
+  return undefined
 }

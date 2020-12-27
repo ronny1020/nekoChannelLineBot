@@ -29,18 +29,16 @@ export default async function wiki(
         elements.index($('p')),
         elements.index($('.toc'))
       )
-      const messageText =
-        selectedElements
-          .text()
-          .replace(/\[\d*\]/g, '')
-          .trim() +
-        '\n\n' +
-        wikiUrl
+      const messageText = `${selectedElements
+        .text()
+        .replace(/\[\d*\]/g, '')
+        .trim()}\n\n${wikiUrl}`
 
       return createTextMessage(messageText)
     } catch (error) {
       return createTextMessage(`WIKI 上找不到條目:${keyword}`)
     }
   }
-  return
+
+  return undefined
 }

@@ -9,9 +9,9 @@ import meme from './feature/meme'
 import pttBeauty from './feature/pttBeauty'
 
 export default async function handleReply(
-  message: string
+  originalMessage: string
 ): Promise<Message | undefined> {
-  message = message.trim()
+  const message = originalMessage.trim()
 
   return (
     (await google(message)) ||

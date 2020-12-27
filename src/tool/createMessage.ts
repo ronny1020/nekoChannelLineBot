@@ -3,7 +3,7 @@ import { ImageMessage, TextMessage } from '@line/bot-sdk'
 export function createTextMessage(text: string): TextMessage {
   return {
     type: 'text',
-    text: text,
+    text,
   }
 }
 

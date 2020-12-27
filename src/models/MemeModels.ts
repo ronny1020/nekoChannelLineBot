@@ -12,4 +12,4 @@ const MemeSchema: Schema = new mongoose.Schema({
   },
 })
 
-export const MemeModels: Model<Meme> = mongoose.model('Meme', MemeSchema)
+export default mongoose.model('Meme', MemeSchema) as Model<Meme>
