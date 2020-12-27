@@ -1,6 +1,6 @@
 import { middleware, MiddlewareConfig } from '@line/bot-sdk'
-import { graphqlHTTP } from 'express-graphql'
 import express from 'express'
+import { ApolloServer } from 'apollo-server-express'
 import handleEvent, { config } from './handleEvent'
 import testForDev from './testForDev'
 import { root, schema } from './GraphQL'
@@ -8,14 +8,12 @@ import connectToMongo from './mongo'
 
 const app = express()
 
-app.use(
-  '/graphql',
-  graphqlHTTP({
-    schema,
-    rootValue: root,
-    graphiql: true,
-  })
-)
+const server = new ApolloServer({
+  schema,
+  rootValue: root,
+})
+
+server.applyMiddleware({ app })
 
 app.post('/callback', middleware(<MiddlewareConfig>config), (req, res) => {
   Promise.all(req.body.events.map(handleEvent))
