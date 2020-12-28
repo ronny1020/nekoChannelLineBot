@@ -99,7 +99,7 @@ export default async function meme(
 
           // add keyboard
           const memeModel = new MemeModels({
-            messageImageUrl,
+            imageUrl: messageImageUrl,
             keywords: [keyword],
           })
           const result = await memeModel.save()
