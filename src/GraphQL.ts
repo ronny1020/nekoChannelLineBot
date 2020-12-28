@@ -1,9 +1,9 @@
-import { buildSchema } from 'graphql'
+import { gql } from 'apollo-server-express'
 import MemeModels from './models/MemeModels'
 
-export const schema = buildSchema(`
+export const typeDefs = gql`
   type Query {
-    Memes:[Meme]
+    Memes: [Meme]
   }
 
   type Meme {
@@ -11,11 +11,10 @@ export const schema = buildSchema(`
     imageUrl: String!
     keywords: [String!]!
   }
-`)
+`
 
-export const root = {
-  async Memes() {
-    const memes = await MemeModels.find({})
-    return memes
+export const resolvers = {
+  Query: {
+    Memes: async () => MemeModels.find({}),
   },
 }

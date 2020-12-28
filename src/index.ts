@@ -3,14 +3,14 @@ import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
 import handleEvent, { config } from './handleEvent'
 import testForDev from './testForDev'
-import { root, schema } from './GraphQL'
+import { typeDefs, resolvers } from './GraphQL'
 import connectToMongo from './mongo'
 
 const app = express()
 
 const server = new ApolloServer({
-  schema,
-  rootValue: root,
+  typeDefs,
+  resolvers,
 })
 
 server.applyMiddleware({ app })
