@@ -13,7 +13,9 @@ export default async function stockPrice(
   if (message.endsWith('股價')) {
     const url = `https://www.google.com/search?q=${encodeURI(message)}&tbm=fin`
 
-    const browser = await puppeteer.launch()
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    })
     const page = await browser.newPage()
     await page.goto(url)
     await page.waitForSelector('.mfMhoc')
@@ -38,10 +40,12 @@ export default async function stockPrice(
       elements.map((element) => element.textContent)
     )
 
+    await browser.close()
+
     const MessageText = `${stockName}
 ${stockCode}
 
-${stockCurrentPrice} ${stockCurrency} |wk4 ${stockRate}
+${stockCurrentPrice} ${stockCurrency} | ${stockRate}
 
 開盤：${stockOpen}
 最高：${stockHight}
@@ -54,8 +58,6 @@ ${stockCurrentPrice} ${stockCurrency} |wk4 ${stockRate}
 52週最低：${stock52wkLow}`
 
     return createTextMessage(MessageText)
-
-    await browser.close()
   }
 
   return undefined
