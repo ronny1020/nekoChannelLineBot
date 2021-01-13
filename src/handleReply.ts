@@ -7,6 +7,7 @@ import postImage from './feature/postImage'
 import translate from './feature/translate'
 import meme from './feature/meme'
 import pttBeauty from './feature/pttBeauty'
+import stockPrice from './feature/stockPrice'
 
 export default async function handleReply(
   originalMessage: string
@@ -14,6 +15,7 @@ export default async function handleReply(
   const message = originalMessage.trim()
 
   return (
+    (await stockPrice(message)) ||
     (await google(message)) ||
     (await wiki(message)) ||
     (await weather(message)) ||
