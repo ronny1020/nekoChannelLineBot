@@ -49,6 +49,7 @@ export default async function meme(
           '台北',
           '翻譯',
           '表特',
+          '最新地震',
         ]
         if (prohibitWords.includes(keyword.toLocaleLowerCase()))
           return createTextMessage('關鍵字含有保留字')

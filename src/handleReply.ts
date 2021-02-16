@@ -8,6 +8,7 @@ import translate from './feature/translate'
 import meme from './feature/meme'
 import pttBeauty from './feature/pttBeauty'
 import stockPrice from './feature/stockPrice'
+import earthquake from './feature/earthquake'
 
 export default async function handleReply(
   originalMessage: string
@@ -22,6 +23,7 @@ export default async function handleReply(
     (await translate(message)) ||
     (await postImage(message)) ||
     (await pttBeauty(message)) ||
+    (await earthquake(message)) ||
     // meme must be the last one
     (await meme(message)) ||
     undefined
