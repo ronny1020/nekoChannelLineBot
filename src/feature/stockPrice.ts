@@ -22,9 +22,14 @@ export default async function stockPrice(
       await page.goto(url)
       // await page.screenshot({ path: `screenshots.jpeg` })
 
-      await page.waitForSelector('.oPhL2e')
+      await page.waitForSelector('#search')
 
-      const stockName = await getTextBySelector(page, '.oPhL2e')
+      let stockName = await getTextBySelector(page, '.oPhL2e')
+
+      const textToRemove = 'Market Summary > '
+      if (stockName?.startsWith(textToRemove))
+        stockName = stockName.slice(textToRemove.length)
+
       const stockCode = await getTextBySelector(page, '.HfMth')
       const stockCurrentPrice = await getTextBySelector(page, '.IsqQVc')
       const stockCurrency = await getTextBySelector(page, '.knFDje')
@@ -68,7 +73,7 @@ ${updatedTime}
     } catch (error) {
       browser.close()
       console.error(error)
-      return createTextMessage('無此股票資訊')
+      return createTextMessage(`無${message.replace(' ', '')}資訊`)
     }
   }
 
