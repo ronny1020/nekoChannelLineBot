@@ -11,41 +11,48 @@ export default async function stockPrice(
   message: string
 ): Promise<TextMessage | undefined> {
   if (message.endsWith('股價')) {
-    const url = `https://www.google.com/search?q=${encodeURI(message)}&tbm=fin`
+    const url = `https://www.google.com.tw/search?q=${encodeURI(message)}`
 
     const browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     })
     const page = await browser.newPage()
-    await page.goto(url)
-    await page.waitForSelector('.mfMhoc')
+    try {
+      page.setDefaultTimeout(10000)
+      await page.goto(url)
+      // await page.screenshot({ path: `screenshots.jpeg` })
 
-    const stockName = await getTextBySelector(page, '.mfMhoc')
-    const stockCode = await getTextBySelector(page, '.wx62f')
-    const stockCurrentPrice = await getTextBySelector(page, '.IsqQVc')
-    const stockCurrency = await getTextBySelector(page, '.knFDje')
-    const stockRate = await getTextBySelector(page, '.WlRRw')
+      await page.waitForSelector('.oPhL2e')
 
-    const [
-      stockOpen,
-      stockHight,
-      stockLow,
-      stockMktCap,
-      stockPERatio,
-      stockDivYield,
-      PrevClose,
-      stock52wkHight,
-      stock52wkLow,
-    ] = await page.$$eval('.iyjjgb', (elements) =>
-      elements.map((element) => element.textContent)
-    )
+      const stockName = await getTextBySelector(page, '.oPhL2e')
+      const stockCode = await getTextBySelector(page, '.HfMth')
+      const stockCurrentPrice = await getTextBySelector(page, '.IsqQVc')
+      const stockCurrency = await getTextBySelector(page, '.knFDje')
+      const stockRate = await getTextBySelector(page, '.WlRRw')
+      const updatedTime = await getTextBySelector(
+        page,
+        '.TgMHGc > span:nth-child(2)'
+      )
 
-    await browser.close()
+      const [
+        stockOpen,
+        stockHight,
+        stockLow,
+        stockMktCap,
+        stockPERatio,
+        stockDivYield,
+        PrevClose,
+        stock52wkHight,
+        stock52wkLow,
+      ] = await page.$$eval('.iyjjgb', (elements) =>
+        elements.map((element) => element.textContent)
+      )
 
-    const MessageText = `${stockName}
+      const MessageText = `${stockName}
 ${stockCode}
 
 ${stockCurrentPrice} ${stockCurrency} | ${stockRate}
+${updatedTime}
 
 開盤：${stockOpen}
 最高：${stockHight}
@@ -57,7 +64,12 @@ ${stockCurrentPrice} ${stockCurrency} | ${stockRate}
 52週最高：${stock52wkHight}
 52週最低：${stock52wkLow}`
 
-    return createTextMessage(MessageText)
+      return createTextMessage(MessageText)
+    } catch (error) {
+      browser.close()
+      console.error(error)
+      return createTextMessage('無此股票資訊')
+    }
   }
 
   return undefined
