@@ -69,10 +69,12 @@ ${updatedTime}
 52週最高：${stock52wkHight}
 52週最低：${stock52wkLow}`
 
+      browser.close()
       return createTextMessage(MessageText)
     } catch (error) {
-      browser.close()
       console.error(error)
+
+      browser.close()
       return createTextMessage(`無${message.replace(' ', '')}資訊`)
     }
   }
