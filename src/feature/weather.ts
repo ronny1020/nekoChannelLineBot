@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { TextMessage, FlexMessage } from '@line/bot-sdk'
-import { createTextMessage, createFlexMessage } from '../tool/createMessage'
+import { createFlexMessage } from '../tool/createMessage'
 
 export default async function weather(
   message: string
@@ -30,20 +30,6 @@ export default async function weather(
   const { data } = await axios.get(
     `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.OPEN_WEATHER_API_KEY}&lang=zh_tw&units=metric`
   )
-
-  if (city === 'Taipei') {
-    return createTextMessage(
-      [
-        `${cityName}現在天氣${data.weather[0].description}`,
-        `現在溫度 ${data.main.temp} 度`,
-        `體感溫度 ${data.main.feels_like} 度`,
-        `(最高 ${data.main.temp_max} 度 ~ 最低 ${data.main.temp_min} 度)`,
-        `大氣壓力 ${data.main.pressure} mb`,
-        `相對濕度 ${data.main.humidity} %`,
-        `能見度     ${data.visibility} 公尺`,
-      ].join('\n')
-    )
-  }
 
   return createFlexMessage(
     {
