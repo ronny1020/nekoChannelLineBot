@@ -41,19 +41,6 @@ export default async function meme(
         const indexOfHttp = message.indexOf('http')
         const keyword = message.substring(2, indexOfHttp).trim()
 
-        const prohibitWords = [
-          'google',
-          'wiki',
-          'weather',
-          '天氣',
-          '台北',
-          '翻譯',
-          '表特',
-          '最新地震',
-        ]
-        if (prohibitWords.includes(keyword.toLocaleLowerCase()))
-          return createTextMessage('關鍵字含有保留字')
-
         if (keyword.includes(' '))
           return createTextMessage('請勿同時輸入複數關鍵字')
 
@@ -117,14 +104,17 @@ export default async function meme(
   }
 
   // get meme
-  const memeList = (await getMemes()) || []
-  for (let i = 0; i < memeList.length; i++) {
-    const { keywords } = memeList[i]
-    for (let j = 0; j < keywords.length; j++) {
-      if (keywords[j] === message) {
-        return createImageMessage(memeList[i].imageUrl)
+  if (message.startsWith('#')) {
+    const memeList = (await getMemes()) || []
+    for (let i = 0; i < memeList.length; i++) {
+      const { keywords } = memeList[i]
+      for (let j = 0; j < keywords.length; j++) {
+        if (keywords[j] === message.slice(1)) {
+          return createImageMessage(memeList[i].imageUrl)
+        }
       }
     }
   }
+
   return undefined
 }
