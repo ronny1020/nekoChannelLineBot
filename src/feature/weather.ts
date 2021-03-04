@@ -24,7 +24,6 @@ export default async function weather(
       break
     default:
       return undefined
-      break
   }
 
   const { data } = await axios.get(
@@ -195,6 +194,6 @@ export default async function weather(
         ],
       },
     },
-    '台南天氣'
+    `${cityName}天氣`
   )
 }

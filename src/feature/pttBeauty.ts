@@ -7,7 +7,7 @@ import {
   TextMessage,
 } from '@line/bot-sdk'
 
-import { createTextMessage } from '../tool/createMessage'
+import { createFlexMessage, createTextMessage } from '../tool/createMessage'
 
 async function getPageDataFromPttUrl(url: string): Promise<string | null> {
   try {
@@ -117,11 +117,7 @@ export default async function pttBeauty(
 
     const flexContainer: FlexCarousel = { type: 'carousel', contents }
 
-    const flexMessage: FlexMessage = {
-      type: 'flex',
-      altText: 'FlexMessage',
-      contents: flexContainer,
-    }
+    const flexMessage: FlexMessage = createFlexMessage(flexContainer, 'PTT表特')
 
     return flexMessage
   }

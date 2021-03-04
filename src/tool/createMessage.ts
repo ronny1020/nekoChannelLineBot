@@ -1,4 +1,9 @@
-import { ImageMessage, TextMessage, FlexMessage } from '@line/bot-sdk'
+import {
+  ImageMessage,
+  TextMessage,
+  FlexMessage,
+  FlexContainer,
+} from '@line/bot-sdk'
 
 export function createTextMessage(text: string): TextMessage {
   return {
@@ -15,7 +20,10 @@ export function createImageMessage(ImageUrl: string): ImageMessage {
   }
 }
 
-export function createFlexMessage(contents: any, altText = ''): FlexMessage {
+export function createFlexMessage(
+  contents: FlexContainer,
+  altText = 'FlexMessage'
+): FlexMessage {
   return {
     type: 'flex',
     altText,
