@@ -1,7 +1,11 @@
 /* eslint-disable no-await-in-loop */
-import { TextMessage, ImageMessage } from '@line/bot-sdk'
+import { TextMessage, ImageMessage, FlexMessage } from '@line/bot-sdk'
 import axios from 'axios'
-import { createTextMessage, createImageMessage } from '../tool/createMessage'
+import {
+  createTextMessage,
+  createImageMessage,
+  createFlexMessage,
+} from '../tool/createMessage'
 import MemeModels from '../models/MemeModels'
 import { Meme } from '../interface'
 
@@ -30,7 +34,7 @@ async function findAllKeywords(): Promise<string[]> {
 
 export default async function meme(
   message: string
-): Promise<TextMessage | ImageMessage | undefined> {
+): Promise<TextMessage | ImageMessage | FlexMessage | undefined> {
   if (message.startsWith('新增')) {
     const lowerCaseMessage = message.toLowerCase()
     const filenameExtensionList: string[] = ['jpg', 'jpeg', 'png']
@@ -101,6 +105,36 @@ export default async function meme(
         }
       }
     }
+  }
+
+  // list meme
+  if (message.startsWith('#list')) {
+    const memeList = (await getMemes()) || []
+    const keywords = memeList.reduce((prev: string[], item) => {
+      return prev.concat(item.keywords)
+    }, [])
+
+    return createFlexMessage(
+      {
+        type: 'bubble',
+        body: {
+          type: 'box',
+          layout: 'vertical',
+          contents: keywords.map((keyword) => ({
+            type: 'button',
+            action: {
+              type: 'message',
+              label: keyword,
+              text: `#${keyword}`,
+            },
+            margin: 'xs',
+            height: 'sm',
+            style: 'secondary',
+          })),
+        },
+      },
+      'Meme List'
+    )
   }
 
   // get meme
