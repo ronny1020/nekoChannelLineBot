@@ -9,9 +9,9 @@ import {
 import MemeModels from '../models/MemeModels'
 import { Meme } from '../interface'
 
-let memes: Meme[] | undefined
+let memes: Meme[]
 
-async function getMemes(): Promise<Meme[] | undefined> {
+async function getMemes(): Promise<Meme[]> {
   if (!memes) {
     memes = await MemeModels.find({})
   }
@@ -20,16 +20,8 @@ async function getMemes(): Promise<Meme[] | undefined> {
 }
 
 async function findAllKeywords(): Promise<string[]> {
-  let allKeyWords: string[] = []
-
   const items = await getMemes()
-
-  if (items)
-    items.forEach((item) => {
-      allKeyWords = [...allKeyWords, ...item.keywords]
-    })
-
-  return allKeyWords
+  return items.reduce((prev: string[], item) => [...prev, ...item.keywords], [])
 }
 
 export default async function meme(
@@ -108,11 +100,8 @@ export default async function meme(
   }
 
   // list meme
-  if (message.startsWith('#list')) {
-    const memeList = (await getMemes()) || []
-    const keywords = memeList.reduce((prev: string[], item) => {
-      return prev.concat(item.keywords)
-    }, [])
+  if (message === '#list') {
+    const keywords = await findAllKeywords()
 
     return createFlexMessage(
       {
