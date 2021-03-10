@@ -101,6 +101,7 @@ export default async function meme(
 
   // list meme
   if (message === '#list') {
+    const searchKeyword = message.substr(5).trim()
     const keywords = await findAllKeywords()
 
     return createFlexMessage(
@@ -109,17 +110,19 @@ export default async function meme(
         body: {
           type: 'box',
           layout: 'vertical',
-          contents: keywords.map((keyword) => ({
-            type: 'button',
-            action: {
-              type: 'message',
-              label: keyword,
-              text: `#${keyword}`,
-            },
-            margin: 'xs',
-            height: 'sm',
-            style: 'secondary',
-          })),
+          contents: keywords
+            .filter((keyword) => keyword.includes(searchKeyword))
+            .map((keyword) => ({
+              type: 'button',
+              action: {
+                type: 'message',
+                label: keyword,
+                text: `#${keyword}`,
+              },
+              margin: 'xs',
+              height: 'sm',
+              style: 'secondary',
+            })),
         },
       },
       'Meme List'
