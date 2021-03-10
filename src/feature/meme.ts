@@ -154,7 +154,7 @@ export default async function meme(
                 url: memeList[i].imageUrl,
                 size: 'full',
                 aspectMode: 'fit',
-                // animated: response.headers['content-length'] * 1 <= 300000,
+                animated: response.headers['content-length'] * 1 <= 300000,
                 aspectRatio: `${size.width}:${size.height}`,
               },
             })
