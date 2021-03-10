@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import { TextMessage, ImageMessage, FlexMessage } from '@line/bot-sdk'
 import axios from 'axios'
+import imageSize from 'image-size'
 import {
   createTextMessage,
   createImageMessage,
@@ -136,7 +137,30 @@ export default async function meme(
       const { keywords } = memeList[i]
       for (let j = 0; j < keywords.length; j++) {
         if (keywords[j] === message.slice(1)) {
-          return createImageMessage(memeList[i].imageUrl)
+          try {
+            const response = await axios({
+              url: memeList[i].imageUrl,
+              method: 'get',
+              responseType: 'arraybuffer',
+            })
+
+            const buffer = Buffer.from(response.data, 'binary')
+            const size = imageSize(buffer)
+
+            return createFlexMessage({
+              type: 'bubble',
+              hero: {
+                type: 'image',
+                url: memeList[i].imageUrl,
+                size: 'full',
+                aspectMode: 'fit',
+                // animated: response.headers['content-length'] * 1 <= 300000,
+                aspectRatio: `${size.width}:${size.height}`,
+              },
+            })
+          } catch (e) {
+            return createImageMessage(memeList[i].imageUrl)
+          }
         }
       }
     }
