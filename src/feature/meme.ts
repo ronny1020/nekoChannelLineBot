@@ -156,6 +156,10 @@ export default async function meme(
                 aspectMode: 'fit',
                 animated: response.headers['content-length'] * 1 <= 300000,
                 aspectRatio: `${size.width}:${size.height}`,
+                action: {
+                  type: 'uri',
+                  uri: memeList[i].imageUrl,
+                },
               },
             })
           } catch (e) {
