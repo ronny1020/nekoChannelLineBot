@@ -78,12 +78,18 @@ export default async function meme(
           }
           // check image info
           try {
-            const { data } = await axios.request({
+            const { data, headers } = await axios.request({
               url: messageImageUrl,
               method: 'get',
             })
 
             if (data.includes('acTL') || extension === 'gif') {
+              if (headers['content-length'] * 1 <= 300000) {
+                return createTextMessage(
+                  `檔案大小 ${headers['content-length']} 過大，超過限制 300000。`
+                )
+              }
+
               MemeToSave.animated = true
 
               const buffer = Buffer.from(data, 'binary')
