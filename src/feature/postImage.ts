@@ -10,27 +10,23 @@ export default async function postImage(
   const filenameExtensionList: string[] = ['jpg', 'jpeg', 'png', 'gif']
 
   if (message.includes('http') && !message.startsWith('新增')) {
-    return (
-      await Promise.all(
-        filenameExtensionList.map(async (extension) => {
-          if (lowerCaseMessage.includes(extension)) {
-            const imageUrl = message.substring(
-              message.indexOf('http'),
-              message.lastIndexOf(extension) + extension.length
-            )
+    const extension = filenameExtensionList.find((item) =>
+      lowerCaseMessage.includes(item)
+    )
 
-            const imageType = await checkImageType(imageUrl, extension)
-            if (typeof imageType === 'string')
-              return createTextMessage(imageType)
-
-            const { animated, size } = imageType
-
-            return createAnimatedImageMessage(imageUrl, animated, size)
-          }
-          return undefined
-        })
+    if (extension) {
+      const imageUrl = message.substring(
+        message.indexOf('http'),
+        message.lastIndexOf(extension) + extension.length
       )
-    ).filter((a) => a)[0]
+
+      const imageType = await checkImageType(imageUrl, extension)
+      if (typeof imageType === 'string') return createTextMessage(imageType)
+
+      const { animated, size } = imageType
+
+      return createAnimatedImageMessage(imageUrl, animated, size)
+    }
   }
   return undefined
 }
