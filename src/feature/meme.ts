@@ -2,13 +2,10 @@
 import { TextMessage, ImageMessage, FlexMessage } from '@line/bot-sdk'
 import axios from 'axios'
 import imageSize from 'image-size'
-import {
-  createTextMessage,
-  createImageMessage,
-  createFlexMessage,
-} from '../tool/createMessage'
+import { createTextMessage, createFlexMessage } from '../tool/createMessage'
 import MemeModels from '../models/MemeModels'
 import { Meme, OriginalMeme } from '../interface'
+import createAnimatedImageMessage from '../tool/createAnimatedImageMessage'
 
 let memes: Meme[]
 const filenameExtensionList: string[] = ['jpg', 'jpeg', 'png', 'gif']
@@ -152,32 +149,17 @@ export default async function meme(
 
   // get meme
   if (message.startsWith('#')) {
+    const inputtedKeyword = message.slice(1)
     const memeList = (await getMemes()) || []
-    for (let i = 0; i < memeList.length; i++) {
-      const { keywords, animated, size } = memeList[i]
-      for (let j = 0; j < keywords.length; j++) {
-        if (keywords[j] === message.slice(1)) {
-          if (animated) {
-            return createFlexMessage({
-              type: 'bubble',
-              hero: {
-                type: 'image',
-                url: memeList[i].imageUrl,
-                size: 'full',
-                aspectMode: 'fit',
-                animated,
-                aspectRatio: `${size?.width}:${size?.height}`,
-                action: {
-                  type: 'uri',
-                  uri: memeList[i].imageUrl,
-                },
-              },
-            })
-          }
-          return createImageMessage(memeList[i].imageUrl)
-        }
-      }
-    }
+    const foundMemes = memeList.find(({ keywords }) =>
+      keywords.includes(inputtedKeyword)
+    )
+
+    if (!foundMemes)
+      return createTextMessage(`找不到關鍵字：${inputtedKeyword}`)
+
+    const { imageUrl, animated, size } = foundMemes
+    return createAnimatedImageMessage(imageUrl, animated, size)
   }
 
   return undefined
