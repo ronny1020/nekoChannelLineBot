@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 import { TextMessage, ImageMessage, FlexMessage } from '@line/bot-sdk'
 import { createTextMessage, createFlexMessage } from '../tool/createMessage'
 import MemeModels from '../models/MemeModels'
@@ -29,8 +28,11 @@ export default async function meme(
     const lowerCaseMessage = message.toLowerCase()
 
     if (message.includes('http')) {
-      for (let i = 0; i < filenameExtensionList.length; i++) {
-        const extension = filenameExtensionList[i]
+      const extension = filenameExtensionList.find((item) =>
+        lowerCaseMessage.includes(item)
+      )
+
+      if (extension) {
         const indexOfHttp = message.indexOf('http')
         const keyword = message.substring(2, indexOfHttp).trim()
 
@@ -52,20 +54,19 @@ export default async function meme(
 
           // add keyword
           const memeList = (await getMemes()) || []
-          for (let j = 0; j < memeList.length; j++) {
-            const { imageUrl, id } = memeList[j]
-            if (imageUrl === messageImageUrl) {
-              const result = await MemeModels.findByIdAndUpdate(id, {
-                $push: { keywords: keyword },
-              })
-              if (result) {
-                memes = await MemeModels.find({})
-                return createTextMessage(
-                  `已增加關鍵字 ${keyword} 至 ${imageUrl}`
-                )
-              }
-              return createTextMessage(`新增失敗`)
+          const foundMeme = memeList.find(
+            ({ imageUrl }) => imageUrl === messageImageUrl
+          )
+          if (foundMeme) {
+            const { imageUrl, id } = foundMeme
+            const result = await MemeModels.findByIdAndUpdate(id, {
+              $push: { keywords: keyword },
+            })
+            if (result) {
+              memes = await MemeModels.find({})
+              return createTextMessage(`已增加關鍵字 ${keyword} 至 ${imageUrl}`)
             }
+            return createTextMessage(`新增失敗`)
           }
 
           // check image info
