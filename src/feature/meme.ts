@@ -8,9 +8,10 @@ import {
   createFlexMessage,
 } from '../tool/createMessage'
 import MemeModels from '../models/MemeModels'
-import { Meme } from '../interface'
+import { Meme, OriginalMeme } from '../interface'
 
 let memes: Meme[]
+const filenameExtensionList: string[] = ['jpg', 'jpeg', 'png', 'gif']
 
 async function getMemes(): Promise<Meme[]> {
   if (!memes) {
@@ -30,7 +31,6 @@ export default async function meme(
 ): Promise<TextMessage | ImageMessage | FlexMessage | undefined> {
   if (message.startsWith('新增')) {
     const lowerCaseMessage = message.toLowerCase()
-    const filenameExtensionList: string[] = ['jpg', 'jpeg', 'png']
 
     if (message.includes('http')) {
       for (let i = 0; i < filenameExtensionList.length; i++) {
@@ -54,17 +54,7 @@ export default async function meme(
             message.lastIndexOf(extension) + extension.length
           )
 
-          try {
-            await axios.request({
-              url: messageImageUrl,
-              method: 'get',
-            })
-          } catch {
-            return createTextMessage(
-              `網址 ${messageImageUrl} 錯誤，無法取得圖片。`
-            )
-          }
-
+          // add keyword
           const memeList = (await getMemes()) || []
           for (let j = 0; j < memeList.length; j++) {
             const { imageUrl, id } = memeList[j]
@@ -82,11 +72,35 @@ export default async function meme(
             }
           }
 
-          // add keyboard
-          const memeModel = new MemeModels({
+          const MemeToSave: OriginalMeme = {
             imageUrl: messageImageUrl,
             keywords: [keyword],
-          })
+          }
+          // check image info
+          try {
+            const { data } = await axios.request({
+              url: messageImageUrl,
+              method: 'get',
+            })
+
+            if (data.includes('acTL') || extension === 'gif') {
+              MemeToSave.animated = true
+
+              const buffer = Buffer.from(data, 'binary')
+              const { height, width } = imageSize(buffer)
+              if (!height || !width)
+                return createTextMessage(
+                  `網址 ${messageImageUrl} 錯誤，無法取得圖片。`
+                )
+              MemeToSave.size = { height, width }
+            }
+          } catch {
+            return createTextMessage(
+              `網址 ${messageImageUrl} 錯誤，無法取得圖片。`
+            )
+          }
+
+          const memeModel = new MemeModels(MemeToSave)
           const result = await memeModel.save()
           if (result) {
             memes = await MemeModels.find({})

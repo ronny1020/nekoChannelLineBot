@@ -7,8 +7,11 @@ const MemeSchema: Schema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  keywords: {
-    type: [String],
+  keywords: [String],
+  animated: Boolean,
+  size: {
+    height: Number,
+    width: Number,
   },
 })
 
