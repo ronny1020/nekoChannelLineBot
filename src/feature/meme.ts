@@ -1,11 +1,10 @@
 /* eslint-disable no-await-in-loop */
 import { TextMessage, ImageMessage, FlexMessage } from '@line/bot-sdk'
-import axios from 'axios'
-import imageSize from 'image-size'
 import { createTextMessage, createFlexMessage } from '../tool/createMessage'
 import MemeModels from '../models/MemeModels'
 import { Meme, OriginalMeme } from '../interface'
 import createAnimatedImageMessage from '../tool/createAnimatedImageMessage'
+import checkImageType from '../tool/checkImageType'
 
 let memes: Meme[]
 const filenameExtensionList: string[] = ['jpg', 'jpeg', 'png', 'gif']
@@ -69,38 +68,14 @@ export default async function meme(
             }
           }
 
+          // check image info
+          const imageType = await checkImageType(messageImageUrl, extension)
+          if (typeof imageType === 'string') return createTextMessage(imageType)
+
           const MemeToSave: OriginalMeme = {
             imageUrl: messageImageUrl,
             keywords: [keyword],
-          }
-          // check image info
-          try {
-            const { data, headers } = await axios.request({
-              url: messageImageUrl,
-              method: 'get',
-            })
-
-            if (data.includes('acTL') || extension === 'gif') {
-              if (headers['content-length'] * 1 <= 300000) {
-                return createTextMessage(
-                  `檔案大小 ${headers['content-length']} 過大，超過限制 300000。`
-                )
-              }
-
-              MemeToSave.animated = true
-
-              const buffer = Buffer.from(data, 'binary')
-              const { height, width } = imageSize(buffer)
-              if (!height || !width)
-                return createTextMessage(
-                  `網址 ${messageImageUrl} 錯誤，無法取得圖片。`
-                )
-              MemeToSave.size = { height, width }
-            }
-          } catch {
-            return createTextMessage(
-              `網址 ${messageImageUrl} 錯誤，無法取得圖片。`
-            )
+            ...imageType,
           }
 
           const memeModel = new MemeModels(MemeToSave)

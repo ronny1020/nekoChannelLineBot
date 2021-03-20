@@ -1,26 +1,36 @@
-import { ImageMessage } from '@line/bot-sdk'
-import { createImageMessage } from '../tool/createMessage'
+import { FlexMessage, ImageMessage, TextMessage } from '@line/bot-sdk'
+import checkImageType from '../tool/checkImageType'
+import createAnimatedImageMessage from '../tool/createAnimatedImageMessage'
+import { createTextMessage } from '../tool/createMessage'
 
 export default async function postImage(
   message: string
-): Promise<ImageMessage | undefined> {
+): Promise<TextMessage | ImageMessage | FlexMessage | undefined> {
   const lowerCaseMessage = message.toLowerCase()
-  const filenameExtensionList: string[] = ['jpg', 'jpeg', 'png']
+  const filenameExtensionList: string[] = ['jpg', 'jpeg', 'png', 'gif']
 
   if (message.includes('http') && !message.startsWith('新增')) {
-    return filenameExtensionList
-      .map((extension) => {
-        if (lowerCaseMessage.includes(extension)) {
-          return createImageMessage(
-            message.substring(
+    return (
+      await Promise.all(
+        filenameExtensionList.map(async (extension) => {
+          if (lowerCaseMessage.includes(extension)) {
+            const imageUrl = message.substring(
               message.indexOf('http'),
               message.lastIndexOf(extension) + extension.length
             )
-          )
-        }
-        return undefined
-      })
-      .filter((a) => a)[0]
+
+            const imageType = await checkImageType(imageUrl, extension)
+            if (typeof imageType === 'string')
+              return createTextMessage(imageType)
+
+            const { animated, size } = imageType
+
+            return createAnimatedImageMessage(imageUrl, animated, size)
+          }
+          return undefined
+        })
+      )
+    ).filter((a) => a)[0]
   }
   return undefined
 }

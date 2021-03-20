@@ -1,3 +1,4 @@
+import { FlexMessage, ImageMessage } from '@line/bot-sdk'
 import { MemeSize } from '../interface'
 import { createFlexMessage, createImageMessage } from './createMessage'
 
@@ -5,7 +6,7 @@ export default function createAnimatedImageMessage(
   imageUrl: string,
   animated = false,
   size: MemeSize | undefined
-) {
+): FlexMessage | ImageMessage {
   if (animated && size) {
     return createFlexMessage({
       type: 'bubble',
