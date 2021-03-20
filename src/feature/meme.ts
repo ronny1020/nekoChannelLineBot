@@ -154,19 +154,10 @@ export default async function meme(
   if (message.startsWith('#')) {
     const memeList = (await getMemes()) || []
     for (let i = 0; i < memeList.length; i++) {
-      const { keywords } = memeList[i]
+      const { keywords, animated, size } = memeList[i]
       for (let j = 0; j < keywords.length; j++) {
         if (keywords[j] === message.slice(1)) {
-          try {
-            const response = await axios({
-              url: memeList[i].imageUrl,
-              method: 'get',
-              responseType: 'arraybuffer',
-            })
-
-            const buffer = Buffer.from(response.data, 'binary')
-            const size = imageSize(buffer)
-
+          if (animated) {
             return createFlexMessage({
               type: 'bubble',
               hero: {
@@ -174,17 +165,16 @@ export default async function meme(
                 url: memeList[i].imageUrl,
                 size: 'full',
                 aspectMode: 'fit',
-                animated: response.headers['content-length'] * 1 <= 300000,
-                aspectRatio: `${size.width}:${size.height}`,
+                animated,
+                aspectRatio: `${size?.width}:${size?.height}`,
                 action: {
                   type: 'uri',
                   uri: memeList[i].imageUrl,
                 },
               },
             })
-          } catch (e) {
-            return createImageMessage(memeList[i].imageUrl)
           }
+          return createImageMessage(memeList[i].imageUrl)
         }
       }
     }
