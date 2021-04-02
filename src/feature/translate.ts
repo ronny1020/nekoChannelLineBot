@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { TextMessage } from '@line/bot-sdk'
 import { createTextMessage } from '../tool/createMessage'
 
@@ -40,18 +40,21 @@ export default async function translate(
     return createTextMessage(
       (
         await Promise.all(
-          textToTranslate
-            .split(/\r?\n/)
-            .map((paragraph) =>
-              axios.get(
-                `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${langCode}&dt=t&q=${encodeURI(
-                  paragraph
-                )}`
-              )
-            )
+          textToTranslate.split(/\r?\n/).map(
+            (paragraph): Promise<AxiosResponse | undefined> =>
+              paragraph.trim()
+                ? axios.get(
+                    `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${langCode}&dt=t&q=${encodeURI(
+                      paragraph
+                    )}`
+                  )
+                : new Promise((resolve) => {
+                    resolve(undefined)
+                  })
+          )
         )
       )
-        .map(({ data }) => data[0][0][0])
+        .map((res): string => (res ? res.data[0][0][0] : ''))
         .join('\n')
     )
   }
