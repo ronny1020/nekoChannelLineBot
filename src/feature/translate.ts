@@ -7,7 +7,7 @@ export default async function translate(
 ): Promise<TextMessage | undefined> {
   if (message.startsWith('翻譯')) {
     let lang
-    let langCode
+    let langCode: string
     let textToTranslateStartFrom = 5
 
     if (message.charAt(2) === '成') {
@@ -36,13 +36,24 @@ export default async function translate(
     }
 
     const textToTranslate = message.substr(textToTranslateStartFrom)
-    const { data } = await axios.get(
-      `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${langCode}&dt=t&q=${encodeURI(
-        textToTranslate
-      )}`
-    )
 
-    return createTextMessage(data[0][0][0])
+    return createTextMessage(
+      (
+        await Promise.all(
+          textToTranslate
+            .split(/\r?\n/)
+            .map((paragraph) =>
+              axios.get(
+                `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${langCode}&dt=t&q=${encodeURI(
+                  paragraph
+                )}`
+              )
+            )
+        )
+      )
+        .map(({ data }) => data[0][0][0])
+        .join('\n')
+    )
   }
 
   return undefined
