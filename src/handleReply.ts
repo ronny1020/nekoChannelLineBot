@@ -14,7 +14,7 @@ import earthquake from './feature/earthquake'
 export default async function handleReply(
   originalMessage: string
 ): Promise<Message | undefined> {
-  const message = originalMessage.trim()
+  const message = originalMessage.trim().toLowerCase()
 
   return (
     (await stockPrice(message)) ||

@@ -6,12 +6,11 @@ import { createTextMessage } from '../tool/createMessage'
 export default async function postImage(
   message: string
 ): Promise<TextMessage | ImageMessage | FlexMessage | undefined> {
-  const lowerCaseMessage = message.toLowerCase()
   const filenameExtensionList: string[] = ['jpg', 'jpeg', 'png', 'gif']
 
   if (message.includes('http') && !message.startsWith('新增')) {
     const extension = filenameExtensionList.find((item) =>
-      lowerCaseMessage.includes(item)
+      message.includes(item)
     )
 
     if (extension) {

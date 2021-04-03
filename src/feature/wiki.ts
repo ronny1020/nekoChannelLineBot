@@ -8,7 +8,7 @@ import { createTextMessage } from '../tool/createMessage'
 export default async function wiki(
   message: string
 ): Promise<TextMessage | undefined> {
-  if (message.substr(0, 4).toLowerCase() === 'wiki') {
+  if (message.substr(0, 4) === 'wiki') {
     const keyword = message.substring(4).trim()
     const wikiUrl = `https://zh.wikipedia.org/wiki/${encodeURI(keyword)}`
 

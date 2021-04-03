@@ -25,11 +25,9 @@ export default async function meme(
   message: string
 ): Promise<TextMessage | ImageMessage | FlexMessage | undefined> {
   if (message.startsWith('新增')) {
-    const lowerCaseMessage = message.toLowerCase()
-
     if (message.includes('http')) {
       const extension = filenameExtensionList.find((item) =>
-        lowerCaseMessage.includes(item)
+        message.includes(item)
       )
 
       if (extension) {
@@ -45,7 +43,7 @@ export default async function meme(
           return createTextMessage(`關鍵字 ${keyword} 已重複`)
         }
 
-        if (lowerCaseMessage.includes(extension)) {
+        if (message.includes(extension)) {
           // check if imageUrl has created before
           const messageImageUrl = message.substring(
             indexOfHttp,
