@@ -1,11 +1,6 @@
 import { TextMessage } from '@line/bot-sdk'
-import puppeteer from 'puppeteer'
 import { createTextMessage } from '../tool/createMessage'
-
-async function getTextBySelector(page: puppeteer.Page, selector: string) {
-  const text = await page.$eval(selector, (element) => element.textContent)
-  return text
-}
+import { createBrowser, getTextBySelector } from '../tool/puppeteerTool'
 
 export default async function stockPrice(
   message: string
@@ -13,9 +8,7 @@ export default async function stockPrice(
   if (message.endsWith('股價')) {
     const url = `https://www.google.com.tw/search?q=${encodeURI(message)}`
 
-    const browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    })
+    const browser = await createBrowser()
     const page = await browser.newPage()
     try {
       page.setDefaultTimeout(10000)
