@@ -1,6 +1,7 @@
 import { Message } from '@line/bot-sdk'
 
 import google from './feature/google'
+import youtube from './feature/youtube'
 import wiki from './feature/wiki'
 import weather from './feature/weather'
 import postImage from './feature/postImage'
@@ -18,13 +19,13 @@ export default async function handleReply(
   return (
     (await stockPrice(message)) ||
     (await google(message)) ||
+    (await youtube(message)) ||
     (await wiki(message)) ||
     (await weather(message)) ||
     (await translate(message)) ||
     (await postImage(message)) ||
     (await pttBeauty(message)) ||
     (await earthquake(message)) ||
-    // meme must be the last one
     (await meme(message)) ||
     undefined
   )
