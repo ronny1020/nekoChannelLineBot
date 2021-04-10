@@ -25,6 +25,7 @@ export default async function help(
       'weather',
       '[台北]天氣',
       '台南天氣',
+      '!WIKI keyword',
       'WIKI keyword',
     ].join('\n')
   )
