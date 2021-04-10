@@ -92,7 +92,7 @@ export default async function meme(
   }
 
   // list meme
-  if (message.startsWith('#list')) {
+  if (message.toLowerCase().startsWith('#list')) {
     const searchKeyword = message.substr(5).trim()
     const keywords = await findAllKeywords()
 
