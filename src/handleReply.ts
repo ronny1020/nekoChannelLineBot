@@ -10,6 +10,7 @@ import meme from './feature/meme'
 import pttBeauty from './feature/pttBeauty'
 import stockPrice from './feature/stockPrice'
 import earthquake from './feature/earthquake'
+import help from './feature/help'
 
 export default async function handleReply(
   originalMessage: string
@@ -27,6 +28,7 @@ export default async function handleReply(
     (await pttBeauty(message)) ||
     (await earthquake(message)) ||
     (await meme(message)) ||
+    (await help(message)) ||
     undefined
   )
 }
