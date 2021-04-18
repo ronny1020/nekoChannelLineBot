@@ -20,8 +20,9 @@ export default async function stockPrice(
 
       let stockName = await getTextBySelector(page, '.oPhL2e')
 
-      const textToRemove = 'Market Summary >'
-      stockName = stockName?.replace(textToRemove, '').trim() || ' '
+      const textToRemove = 'Market Summary'
+      stockName =
+        stockName?.replace(textToRemove, '').replace('>', '').trim() || ' '
 
       const stockCode = await getTextBySelector(page, '.HfMth')
       const stockCurrentPrice = await getTextBySelector(page, '.IsqQVc')
