@@ -45,33 +45,45 @@ export default function createCommonTextMessage(
       body: {
         type: 'box',
         layout: 'vertical',
-        contents: commonTextMessageData.contents.map((content) =>
-          content === 'separator'
-            ? {
-                type: 'separator',
-                margin: 'xs',
-              }
-            : {
-                type: 'box',
-                layout: 'horizontal',
-                contents: [
-                  {
-                    type: 'text',
-                    text: content.key,
-                    size: 'sm',
-                    color: content.keyColor ?? '#555555',
-                    flex: 0,
-                  },
-                  {
-                    type: 'text',
-                    text: content.value,
-                    size: 'sm',
-                    color: content.valueColor ?? '#111111',
-                    align: 'end',
-                  },
-                ],
-              }
-        ),
+        contents: [
+          {
+            type: 'box',
+            layout: 'horizontal',
+            contents: titleComponent,
+          },
+          {
+            type: 'separator',
+            margin: 'xs',
+          },
+          ...commonTextMessageData.contents.map(
+            (content): FlexComponent =>
+              content === 'separator'
+                ? {
+                    type: 'separator',
+                    margin: 'xs',
+                  }
+                : {
+                    type: 'box',
+                    layout: 'horizontal',
+                    contents: [
+                      {
+                        type: 'text',
+                        text: content.key,
+                        size: 'sm',
+                        color: content.keyColor ?? '#555555',
+                        flex: 0,
+                      },
+                      {
+                        type: 'text',
+                        text: content.value,
+                        size: 'sm',
+                        color: content.valueColor ?? '#111111',
+                        align: 'end',
+                      },
+                    ],
+                  }
+          ),
+        ],
       },
     },
     altText
