@@ -45,7 +45,7 @@ export default async function airPollution(
   const formattedComponents = Object.fromEntries(
     Object.entries(data.list[0].components).map(([key, value]) => [
       key,
-      `${Math.round(value * 100) / 100}μg/m3`,
+      `${value.toFixed(2)} μg/m3`,
     ])
   )
 
