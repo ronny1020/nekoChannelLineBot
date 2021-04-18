@@ -21,8 +21,7 @@ export function createImageMessage(ImageUrl: string): ImageMessage {
 }
 
 export function createFlexMessage(
-  // contents: FlexContainer,
-  contents: any,
+  contents: FlexContainer,
   altText = 'FlexMessage'
 ): FlexMessage {
   return {

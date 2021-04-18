@@ -1,4 +1,4 @@
-import { FlexMessage, ImageMessage } from '@line/bot-sdk'
+import { FlexMessage, ImageMessage, FlexContainer } from '@line/bot-sdk'
 import { MemeSize } from '../interface'
 import { createFlexMessage, createImageMessage } from './createMessage'
 
@@ -20,9 +20,10 @@ export default function createAnimatedImageMessage(
         action: {
           type: 'uri',
           uri: imageUrl,
+          label: 'open image',
         },
       },
-    })
+    } as FlexContainer)
   }
   return createImageMessage(imageUrl)
 }
