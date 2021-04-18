@@ -1,5 +1,5 @@
 import { FlexMessage, ImageMessage, FlexContainer } from '@line/bot-sdk'
-import { MemeSize } from '../interface'
+import { MemeSize } from '../interface/meme'
 import { createFlexMessage, createImageMessage } from './createMessage'
 
 export default function createAnimatedImageMessage(

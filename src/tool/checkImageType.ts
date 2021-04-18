@@ -1,6 +1,6 @@
 import axios from 'axios'
 import imageSize from 'image-size'
-import { ImageType } from '../interface'
+import { ImageType } from '../interface/meme'
 
 export default async function checkImageType(
   imageUrl: string,

@@ -1,7 +1,7 @@
 import { TextMessage, ImageMessage, FlexMessage } from '@line/bot-sdk'
 import { createTextMessage, createFlexMessage } from '../tool/createMessage'
 import MemeModels from '../models/MemeModels'
-import { Meme, OriginalMeme } from '../interface'
+import { Meme, OriginalMeme } from '../interface/meme'
 import createAnimatedImageMessage from '../tool/createAnimatedImageMessage'
 import checkImageType from '../tool/checkImageType'
 

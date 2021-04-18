@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { TextMessage, FlexMessage } from '@line/bot-sdk'
 import createCommonTextMessage from '../tool/createCommonTextMessage'
+import { WeatherData } from '../interface/weather'
 
 export default async function weather(
   message: string
@@ -26,9 +27,9 @@ export default async function weather(
       return undefined
   }
 
-  const { data } = await axios.get(
+  const { data } = (await axios.get(
     `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.OPEN_WEATHER_API_KEY}&lang=zh_tw&units=metric`
-  )
+  )) as { data: WeatherData }
 
   return createCommonTextMessage(
     {
@@ -42,6 +43,7 @@ export default async function weather(
           key: ' ',
           value: `(最高 ${data.main.temp_max} 度 ~ 最低 ${data.main.temp_min} 度)`,
         },
+        { key: '大氣壓力', value: `${data.main.pressure} mb` },
         { key: '相對濕度', value: `${data.main.humidity} %` },
         { key: '能見度', value: `${data.visibility} 公尺` },
       ],

@@ -1,5 +1,5 @@
 import mongoose, { Schema, Model } from 'mongoose'
-import { Meme } from '../interface'
+import { Meme } from '../interface/meme'
 
 const MemeSchema: Schema = new mongoose.Schema({
   imageUrl: {
