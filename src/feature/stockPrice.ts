@@ -1,10 +1,11 @@
-import { TextMessage } from '@line/bot-sdk'
+import { FlexMessage, TextMessage } from '@line/bot-sdk'
+import createCommonTextMessage from '../tool/createCommonTextMessage'
 import { createTextMessage } from '../tool/createMessage'
 import { createBrowser, getTextBySelector } from '../tool/puppeteerTool'
 
 export default async function stockPrice(
   message: string
-): Promise<TextMessage | undefined> {
+): Promise<FlexMessage | TextMessage | undefined> {
   if (message.endsWith('股價')) {
     const url = `https://www.google.com.tw/search?q=${encodeURI(message)}`
 
@@ -19,9 +20,8 @@ export default async function stockPrice(
 
       let stockName = await getTextBySelector(page, '.oPhL2e')
 
-      const textToRemove = 'Market Summary > '
-      if (stockName?.startsWith(textToRemove))
-        stockName = stockName.slice(textToRemove.length)
+      const textToRemove = 'Market Summary >'
+      stockName = stockName?.replace(textToRemove, '').trim() || ' '
 
       const stockCode = await getTextBySelector(page, '.HfMth')
       const stockCurrentPrice = await getTextBySelector(page, '.IsqQVc')
@@ -46,24 +46,68 @@ export default async function stockPrice(
         elements.map((element) => element.textContent)
       )
 
-      const MessageText = `${stockName}
-${stockCode}
-
-${stockCurrentPrice} ${stockCurrency} | ${stockRate}
-${updatedTime}
-
-開盤：${stockOpen}
-最高：${stockHight}
-最低：${stockLow}
-市值：${stockMktCap}
-本益比：${stockPERatio}
-殖利率：${stockDivYield}
-昨收：${PrevClose}
-52週最高：${stock52wkHight}
-52週最低：${stock52wkLow}`
-
       browser.close()
-      return createTextMessage(MessageText)
+
+      let stockColor
+      if (stockRate?.startsWith('+')) stockColor = '#dc3545'
+      else if (stockRate?.startsWith('-')) stockColor = '#28a745'
+
+      return createCommonTextMessage(
+        {
+          title: stockName,
+          subTitle: stockCode || '',
+          contents: [
+            {
+              key: `${stockCurrentPrice} ${stockCurrency}`,
+              keyColor: stockColor,
+              value: stockRate || ' ',
+              valueColor: stockColor,
+            },
+            {
+              key: '更新時間',
+              value: updatedTime || ' ',
+            },
+            'separator',
+            {
+              key: '開盤',
+              value: stockOpen || ' ',
+            },
+            {
+              key: '最高',
+              value: stockHight || ' ',
+            },
+            {
+              key: '最低',
+              value: stockLow || ' ',
+            },
+            {
+              key: '市值',
+              value: stockMktCap || ' ',
+            },
+            {
+              key: '本益比',
+              value: stockPERatio || ' ',
+            },
+            {
+              key: '殖利率',
+              value: stockDivYield || ' ',
+            },
+            {
+              key: '昨收',
+              value: PrevClose || ' ',
+            },
+            {
+              key: '52週最高',
+              value: stock52wkHight || ' ',
+            },
+            {
+              key: '52週最低',
+              value: stock52wkLow || ' ',
+            },
+          ],
+        },
+        `${stockName}股價`
+      )
     } catch (error) {
       console.error(error)
 
