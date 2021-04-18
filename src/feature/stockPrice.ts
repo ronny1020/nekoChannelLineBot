@@ -56,13 +56,15 @@ export default async function stockPrice(
       return createCommonTextMessage(
         {
           title: stockName,
-          subTitle: stockCode || '',
+
           contents: [
             {
               key: `${stockCurrentPrice} ${stockCurrency}`,
               keyColor: stockColor,
+              keySize: 'md',
               value: stockRate || ' ',
               valueColor: stockColor,
+              valueSize: 'md',
             },
             {
               key: '更新時間',
@@ -104,6 +106,11 @@ export default async function stockPrice(
             {
               key: '52週最低',
               value: stock52wkLow || ' ',
+            },
+            'separator',
+            {
+              key: '代號',
+              value: stockCode || ' ',
             },
           ],
         },

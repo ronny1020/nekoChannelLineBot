@@ -1,15 +1,30 @@
 import { FlexComponent, FlexMessage } from '@line/bot-sdk'
 import { createFlexMessage } from './createMessage'
 
+type TextSize =
+  | 'xxs'
+  | 'xs'
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'xl'
+  | 'xxl'
+  | '3xl'
+  | '4xl'
+  | '5xl'
+
 export interface CommonTextMessageDataContent {
   key: string
   keyColor?: string
+  keySize?: TextSize
   value: string
   valueColor?: string
+  valueSize?: TextSize
 }
 
 export interface CommonTextMessageData {
   title: string
+  titleSize?: TextSize
   subTitle?: string
   contents: (CommonTextMessageDataContent | 'separator')[]
 }
@@ -22,10 +37,11 @@ export default function createCommonTextMessage(
     {
       type: 'text',
       text: commonTextMessageData.title,
-      size: 'xl',
+      size: commonTextMessageData.titleSize ?? 'xl',
       color: '#555555',
       flex: 0,
       weight: 'bold',
+      wrap: true,
     },
   ]
 
@@ -69,14 +85,14 @@ export default function createCommonTextMessage(
                       {
                         type: 'text',
                         text: content.key,
-                        size: 'sm',
+                        size: content.keySize ?? 'sm',
                         color: content.keyColor ?? '#555555',
                         flex: 0,
                       },
                       {
                         type: 'text',
                         text: content.value,
-                        size: 'sm',
+                        size: content.valueSize ?? 'sm',
                         color: content.valueColor ?? '#111111',
                         align: 'end',
                       },
