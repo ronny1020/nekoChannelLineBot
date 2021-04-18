@@ -37,8 +37,9 @@ export default async function weather(
       contents: [
         { key: '現在溫度', value: `${data.main.temp} 度` },
         { key: '體感溫度', value: `${data.main.feels_like} 度` },
+        // don't use empty string
         {
-          key: '',
+          key: ' ',
           value: `(最高 ${data.main.temp_max} 度 ~ 最低 ${data.main.temp_min} 度)`,
         },
         { key: '相對濕度', value: `${data.main.humidity} %` },
