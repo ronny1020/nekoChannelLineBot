@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { TextMessage, FlexMessage } from '@line/bot-sdk'
-import createCommonTextMessage from '../tool/createCommonTextMessage'
+import { createBubbleFlexTextMessage } from '../tool/createFlexTextMessage'
 import { WeatherData } from '../interface/weather'
 
 export default async function weather(
@@ -31,7 +31,7 @@ export default async function weather(
     `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.OPEN_WEATHER_API_KEY}&lang=zh_tw&units=metric`
   )) as { data: WeatherData }
 
-  return createCommonTextMessage(
+  return createBubbleFlexTextMessage(
     {
       title: `${cityName}天氣`,
       subTitle: data.weather[0].description,

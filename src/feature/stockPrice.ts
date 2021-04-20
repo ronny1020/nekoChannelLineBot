@@ -1,5 +1,5 @@
 import { FlexMessage, TextMessage } from '@line/bot-sdk'
-import createCommonTextMessage from '../tool/createCommonTextMessage'
+import { createBubbleFlexTextMessage } from '../tool/createFlexTextMessage'
 import { createTextMessage } from '../tool/createMessage'
 import { createBrowser, getTextBySelector } from '../tool/puppeteerTool'
 
@@ -53,7 +53,7 @@ export default async function stockPrice(
       if (stockRate?.startsWith('+')) stockColor = '#dc3545'
       else if (stockRate?.startsWith('-')) stockColor = '#28a745'
 
-      return createCommonTextMessage(
+      return createBubbleFlexTextMessage(
         {
           title: stockName,
 

@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { TextMessage, FlexMessage } from '@line/bot-sdk'
 import { AirPollutionData } from '../interface/airPollution'
-import createCommonTextMessage from '../tool/createCommonTextMessage'
+import { createBubbleFlexTextMessage } from '../tool/createFlexTextMessage'
+import { locationMapping } from '../tool/location'
 
 export default async function airPollution(
   message: string
@@ -10,25 +11,25 @@ export default async function airPollution(
     return undefined
   }
 
-  let lat: number
-  let lon: number
+  let locationKey: 'taipei' | 'tainan'
+
   let cityName = ''
   switch (message) {
     case 'air pollution':
     case '空汙':
     case '台北空汙':
-      lat = 25.033
-      lon = 121.5654
+      locationKey = 'taipei'
       cityName = '台北'
       break
     case '台南空汙':
-      lat = 22.9997
-      lon = 120.227
+      locationKey = 'tainan'
       cityName = '台南'
       break
     default:
       return undefined
   }
+
+  const { lat, lon } = locationMapping[locationKey]
 
   const pollutionLevel = {
     '1': 'Good',
@@ -39,7 +40,7 @@ export default async function airPollution(
   }
 
   const { data } = (await axios.get(
-    `http://api.openweathermap.org/data/2.5/air_pollution?lat=25&lon=121.5&appid=${process.env.OPEN_WEATHER_API_KEY}&lang=zh_tw&units=metric`
+    `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${process.env.OPEN_WEATHER_API_KEY}&lang=zh_tw&units=metric`
   )) as { data: AirPollutionData }
 
   const formattedComponents = Object.fromEntries(
@@ -51,7 +52,7 @@ export default async function airPollution(
 
   const dataOrder = ['co', 'no', 'no2', 'o3', 'so2', 'pm2_5', 'pm10', 'nh3']
 
-  return createCommonTextMessage(
+  return createBubbleFlexTextMessage(
     {
       title: `${cityName}空汙`,
       subTitle: pollutionLevel[data.list[0].main.aqi] || ' ',
