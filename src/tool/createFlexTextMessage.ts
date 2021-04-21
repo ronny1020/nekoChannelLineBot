@@ -2,6 +2,7 @@ import {
   FlexBubble,
   FlexCarousel,
   FlexComponent,
+  FlexIcon,
   FlexMessage,
 } from '@line/bot-sdk'
 import { createFlexMessage } from './createMessage'
@@ -63,14 +64,16 @@ function createTitleComponent({
       align: 'end',
     })
 
-  if (titleIconUrl)
-    titleComponent.push({
+  if (titleIconUrl) {
+    const iconComponent: FlexIcon = {
       type: 'icon',
       size: '4xl',
       url: titleIconUrl,
       aspectRatio: '1:1',
       position: 'relative',
-    })
+    }
+    titleComponent.push(iconComponent)
+  }
 
   return titleComponent
 }
@@ -113,7 +116,7 @@ function createContentRow(
 
   return {
     type: 'box',
-    layout: 'horizontal',
+    layout: 'baseline',
     contents: contentRow,
   }
 }
@@ -131,7 +134,7 @@ function createFlexTextMessageBubble({
       contents: [
         {
           type: 'box',
-          layout: 'horizontal',
+          layout: 'baseline',
           contents: createTitleComponent(titleData),
         },
         {

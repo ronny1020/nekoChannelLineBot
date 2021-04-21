@@ -61,36 +61,46 @@ export default async function weatherForecast(
 
   return createCarouselFlexTextMessage(
     daily.map((day) => ({
-      title: moment(day.dt * 1000).format('YYYY/MM/DD (ddd)'),
+      title: moment(day.dt * 1000).format('MM/DD (ddd)'),
       subTitle: day.weather[0].description,
-      titleIconUrl: `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`,
+      titleIconUrl: `https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`,
       contents: [
         { key: '降雨機率', value: `${day.pop * 100} %` },
         { key: '雲量', value: `${day.clouds} %` },
         { key: '紫外線指數', value: `${day.uvi}` },
         {
           key: '早晨溫度/體感',
-          value: `${day.temp.morn} / ${day.feels_like.morn} 度`,
+          value: `${day.temp.morn.toFixed(2)} / ${day.feels_like.morn.toFixed(
+            2
+          )} 度`,
         },
         {
           key: '白天溫度/體感',
-          value: `${day.temp.day} / ${day.feels_like.day} 度`,
+          value: `${day.temp.day.toFixed(2)} / ${day.feels_like.day.toFixed(
+            2
+          )} 度`,
         },
         {
           key: '傍晚溫度/體感',
-          value: `${day.temp.eve} / ${day.feels_like.eve} 度`,
+          value: `${day.temp.eve.toFixed(2)} / ${day.feels_like.eve.toFixed(
+            2
+          )} 度`,
         },
         {
           key: '夜晚溫度/體感',
-          value: `${day.temp.night} / ${day.feels_like.night} 度`,
+          value: `${day.temp.night.toFixed(2)} / ${day.feels_like.night.toFixed(
+            2
+          )} 度`,
         },
         {
           key: '溫度範圍 最高/最低',
-          value: `${day.temp.max} / ${day.temp.min} 度`,
+          value: `${day.temp.max.toFixed(2)} / ${day.temp.min.toFixed(2)} 度`,
         },
         {
           key: '風速/陣風',
-          value: `${day.wind_speed} / ${day.wind_gust} m/s`,
+          value: `${day.wind_speed.toFixed(2)} / ${day.wind_gust.toFixed(
+            2
+          )} m/s`,
         },
         {
           key: '風向',
@@ -98,7 +108,7 @@ export default async function weatherForecast(
         },
         { key: '大氣壓力', value: `${day.pressure} mb` },
         { key: '相對濕度', value: `${day.humidity} %` },
-        { key: '月像', value: `${day.moon_phase * 100} %` },
+        { key: '月像', value: `${(day.moon_phase * 100).toFixed()} %` },
       ],
     })),
     `${cityName}天氣預報`
