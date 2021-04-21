@@ -4,6 +4,7 @@ import google from './feature/google'
 import youtube from './feature/youtube'
 import wiki from './feature/wiki'
 import weather from './feature/weather'
+import weatherForecast from './feature/weatherForecast'
 import airPollution from './feature/airPollution'
 import postImage from './feature/postImage'
 import translate from './feature/translate'
@@ -24,6 +25,7 @@ export default async function handleReply(
     (await youtube(message)) ||
     (await wiki(message)) ||
     (await weather(message)) ||
+    (await weatherForecast(message)) ||
     (await airPollution(message)) ||
     (await translate(message)) ||
     (await postImage(message)) ||

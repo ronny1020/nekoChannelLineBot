@@ -18,30 +18,35 @@ type TextSize =
   | '4xl'
   | '5xl'
 
-export interface CommonTextMessageDataContent {
+export interface FlexTextMessageDataContent {
   key: string
   keyColor?: string
   keySize?: TextSize
   value: string
   valueColor?: string
   valueSize?: TextSize
+  iconUrl?: string
 }
 
 export interface CommonTextMessageData {
   title: string
   titleSize?: TextSize
+  titleIconUrl?: string
   subTitle?: string
-  contents: (CommonTextMessageDataContent | 'separator')[]
+  contents: (FlexTextMessageDataContent | 'separator')[]
 }
 
-function createFlexTextMessageBubble(
-  commonTextMessageData: CommonTextMessageData
-): FlexBubble {
+function createTitleComponent({
+  title,
+  titleSize,
+  titleIconUrl,
+  subTitle,
+}: Omit<CommonTextMessageData, 'contents'>) {
   const titleComponent: FlexComponent[] = [
     {
       type: 'text',
-      text: commonTextMessageData.title,
-      size: commonTextMessageData.titleSize ?? 'xl',
+      text: title,
+      size: titleSize ?? 'xl',
       color: '#555555',
       flex: 0,
       weight: 'bold',
@@ -49,15 +54,74 @@ function createFlexTextMessageBubble(
     },
   ]
 
-  if (commonTextMessageData.subTitle)
+  if (subTitle)
     titleComponent.push({
       type: 'text',
-      text: commonTextMessageData.subTitle,
+      text: subTitle,
       size: 'xl',
       color: '#111111',
       align: 'end',
     })
 
+  if (titleIconUrl)
+    titleComponent.push({
+      type: 'icon',
+      size: '4xl',
+      url: titleIconUrl,
+      aspectRatio: '1:1',
+      position: 'relative',
+    })
+
+  return titleComponent
+}
+
+function createContentRow(
+  content: FlexTextMessageDataContent | 'separator'
+): FlexComponent {
+  if (content === 'separator')
+    return {
+      type: 'separator',
+      margin: 'xs',
+    }
+
+  const contentRow: FlexComponent[] = [
+    {
+      type: 'text',
+      text: content.key || ' ',
+      size: content.keySize ?? 'sm',
+      color: content.keyColor ?? '#555555',
+      flex: 0,
+    },
+    {
+      type: 'text',
+      text: content.value || ' ',
+      size: content.valueSize ?? 'sm',
+      color: content.valueColor ?? '#111111',
+      align: 'end',
+    },
+  ]
+
+  if (content.iconUrl) {
+    contentRow.push({
+      type: 'icon',
+      size: '4xl',
+      url: content.iconUrl,
+      aspectRatio: '1:1',
+      position: 'relative',
+    })
+  }
+
+  return {
+    type: 'box',
+    layout: 'horizontal',
+    contents: contentRow,
+  }
+}
+
+function createFlexTextMessageBubble({
+  contents,
+  ...titleData
+}: CommonTextMessageData): FlexBubble {
   return {
     type: 'bubble',
     size: 'kilo',
@@ -68,40 +132,13 @@ function createFlexTextMessageBubble(
         {
           type: 'box',
           layout: 'horizontal',
-          contents: titleComponent,
+          contents: createTitleComponent(titleData),
         },
         {
           type: 'separator',
           margin: 'xs',
         },
-        ...commonTextMessageData.contents.map(
-          (content): FlexComponent =>
-            content === 'separator'
-              ? {
-                  type: 'separator',
-                  margin: 'xs',
-                }
-              : {
-                  type: 'box',
-                  layout: 'horizontal',
-                  contents: [
-                    {
-                      type: 'text',
-                      text: content.key,
-                      size: content.keySize ?? 'sm',
-                      color: content.keyColor ?? '#555555',
-                      flex: 0,
-                    },
-                    {
-                      type: 'text',
-                      text: content.value,
-                      size: content.valueSize ?? 'sm',
-                      color: content.valueColor ?? '#111111',
-                      align: 'end',
-                    },
-                  ],
-                }
-        ),
+        ...contents.map(createContentRow),
       ],
     },
   }
