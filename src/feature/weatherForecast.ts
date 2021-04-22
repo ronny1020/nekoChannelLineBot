@@ -104,6 +104,7 @@ export default async function weatherForecast(
           key: '溫度範圍 最低~最高',
           value: `${day.temp.min.toFixed(2)} ~ ${day.temp.max.toFixed(2)} 度`,
         },
+        { key: '露點', value: `${day.dew_point.toFixed(2)} 度` },
         {
           key: '風速/陣風',
           value: `${day.wind_speed.toFixed(2)} / ${day.wind_gust.toFixed(
@@ -117,6 +118,12 @@ export default async function weatherForecast(
         { key: '大氣壓力', value: `${day.pressure} mb` },
         { key: '相對濕度', value: `${day.humidity} %` },
         { key: '月像', value: `${(day.moon_phase * 100).toFixed()} %` },
+        {
+          key: '日出/日落',
+          value: `${moment(day.sunrise * 1000).format('hh:mm:ss')} / ${moment(
+            day.sunset * 1000
+          ).format('hh:mm:ss')}`,
+        },
         'separator',
         { key: ' ', value: cityName },
       ],
