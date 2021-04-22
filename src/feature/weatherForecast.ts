@@ -5,6 +5,14 @@ import { ForecastData } from '../interface/weather'
 import { locationMapping } from '../tool/location'
 import { createCarouselFlexTextMessage } from '../tool/createFlexTextMessage'
 
+function uviLevel(uvi: number) {
+  if (uvi < 3) return '低量'
+  if (uvi < 6) return '中量'
+  if (uvi < 8) return '高量'
+  if (uvi < 1) return '過量'
+  return '危險'
+}
+
 function getWindDirection(wind_deg: number) {
   const windDegreePercentage = wind_deg / 360
   if (windDegreePercentage < 1 / 32) return '北'
@@ -67,7 +75,7 @@ export default async function weatherForecast(
       contents: [
         { key: '降雨機率', value: `${day.pop * 100} %` },
         { key: '雲量', value: `${day.clouds} %` },
-        { key: '紫外線指數', value: `${day.uvi}` },
+        { key: '紫外線指數', value: `${day.uvi} ${uviLevel(day.uvi)}` },
         {
           key: '早晨溫度/體感',
           value: `${day.temp.morn.toFixed(2)} / ${day.feels_like.morn.toFixed(
