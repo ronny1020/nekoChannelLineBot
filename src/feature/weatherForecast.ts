@@ -69,11 +69,11 @@ export default async function weatherForecast(
 
   return createCarouselFlexTextMessage(
     daily.map((day) => ({
-      title: moment(day.dt * 1000).format('MM/DD (ddd)'),
+      title: moment(day.dt * 1000).format('do DD'),
       subTitle: day.weather[0].description,
       titleIconUrl: `https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`,
       contents: [
-        { key: '降雨機率', value: `${day.pop * 100} %` },
+        { key: '降雨機率', value: `${(day.pop * 100).toFixed()} %` },
         { key: '雲量', value: `${day.clouds} %` },
         { key: '紫外線指數', value: `${day.uvi} ${uviLevel(day.uvi)}` },
         {
@@ -101,8 +101,8 @@ export default async function weatherForecast(
           )} 度`,
         },
         {
-          key: '溫度範圍 最高/最低',
-          value: `${day.temp.max.toFixed(2)} / ${day.temp.min.toFixed(2)} 度`,
+          key: '溫度範圍 最低~最高',
+          value: `${day.temp.min.toFixed(2)} ~ ${day.temp.max.toFixed(2)} 度`,
         },
         {
           key: '風速/陣風',
@@ -117,6 +117,8 @@ export default async function weatherForecast(
         { key: '大氣壓力', value: `${day.pressure} mb` },
         { key: '相對濕度', value: `${day.humidity} %` },
         { key: '月像', value: `${(day.moon_phase * 100).toFixed()} %` },
+        'separator',
+        { key: ' ', value: cityName },
       ],
     })),
     `${cityName}天氣預報`
