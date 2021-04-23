@@ -9,7 +9,7 @@ function uviLevel(uvi: number) {
   if (uvi < 3) return '低量'
   if (uvi < 6) return '中量'
   if (uvi < 8) return '高量'
-  if (uvi < 1) return '過量'
+  if (uvi < 11) return '過量'
   return '危險'
 }
 
@@ -69,9 +69,7 @@ export default async function weatherForecast(
 
   return createCarouselFlexTextMessage(
     daily.map((day) => ({
-      title: moment(day.dt * 1000)
-        .utcOffset('+0800')
-        .format('Do ddd'),
+      title: moment(day.dt * 1000).format('Do ddd'),
       subTitle: day.weather[0].description,
       titleIconUrl: `https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`,
       contents: [
@@ -122,11 +120,9 @@ export default async function weatherForecast(
         { key: '月像', value: `${(day.moon_phase * 100).toFixed()} %` },
         {
           key: '日出/日落',
-          value: `${moment(day.sunrise * 1000)
-            .utcOffset('+0800')
-            .format('HH:mm:ss')} / ${moment(day.sunset * 1000)
-            .utcOffset('+0800')
-            .format('HH:mm:ss')}`,
+          value: `${moment(day.sunrise * 1000).format('HH:mm:ss')} / ${moment(
+            day.sunset * 1000
+          ).format('HH:mm:ss')}`,
         },
         'separator',
         { key: ' ', value: cityName },
