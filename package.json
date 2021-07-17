@@ -8,52 +8,46 @@
     "dev": "nodemon",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint src/** --fix"
+    "lint": "eslint src/** --fix",
+    "postinstall": "husky install",
+    "prepare": "husky install",
+    "pre-commit": "lint-staged"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/cheerio": "^0.22.23",
-    "@types/express": "^4.17.9",
-    "@types/mongoose": "^5.10.2",
-    "@types/puppeteer": "^5.4.2",
-    "@typescript-eslint/eslint-plugin": "^4.11.0",
-    "@typescript-eslint/parser": "^4.9.0",
-    "eslint": "^7.15.0",
-    "eslint-config-airbnb-typescript": "^12.0.0",
-    "eslint-config-prettier": "^7.0.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-prettier": "^3.2.0",
-    "husky": "^4.3.0",
-    "nodemon": "^2.0.6",
-    "prettier": "^2.2.1",
-    "pretty-quick": "^3.1.0",
-    "ts-node": "^9.1.0",
-    "typescript": "^4.1.2"
+    "@types/cheerio": "^0.22.30",
+    "@types/express": "^4.17.13",
+    "@types/mongoose": "^5.11.97",
+    "@types/puppeteer": "^5.4.4",
+    "@typescript-eslint/eslint-plugin": "^4.28.3",
+    "@typescript-eslint/parser": "^4.28.3",
+    "eslint": "^7.30.0",
+    "eslint-config-airbnb-typescript": "^12.3.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-prettier": "^3.4.0",
+    "husky": "^7.0.1",
+    "lint-staged": "^11.0.1",
+    "nodemon": "^2.0.12",
+    "prettier": "^2.3.2",
+    "pretty-quick": "^3.1.1",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
   },
   "dependencies": {
-    "@line/bot-sdk": "^7.2.0",
-    "apollo-server-express": "^2.19.1",
-    "axios": "^0.21.0",
-    "cheerio": "^1.0.0-rc.3",
-    "dotenv": "^8.2.0",
+    "@line/bot-sdk": "^7.3.0",
+    "apollo-server-express": "^3.0.1",
+    "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.10",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-graphql": "^0.12.0",
-    "graphql": "^15.4.0",
-    "image-size": "^0.9.4",
+    "graphql": "^15.5.1",
+    "image-size": "^1.0.0",
     "moment": "^2.29.1",
-    "mongoose": "^5.11.7",
-    "prompts": "^2.4.0",
-    "puppeteer": "^5.5.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "eslint src/**"
-    }
-  },
-  "lint-staged": {
-    "*.{js,ts,tsx}": [
-      "eslint --fix"
-    ]
+    "mongoose": "^5.13.3",
+    "prompts": "^2.4.1",
+    "puppeteer": "^10.1.0"
   }
 }

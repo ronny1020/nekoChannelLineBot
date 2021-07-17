@@ -12,10 +12,7 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   introspection: true,
-  playground: true,
 })
-
-server.applyMiddleware({ app })
 
 app.post('/callback', middleware(<MiddlewareConfig>config), (req, res) => {
   Promise.all(req.body.events.map(handleEvent))
@@ -32,6 +29,9 @@ async function init() {
   app.listen(port, () => {
     console.log(`listening on ${port}`)
   })
+
+  await server.start()
+  server.applyMiddleware({ app })
 
   await connectToMongo()
 
