@@ -24,10 +24,10 @@ export default async function handleEvent(event: WebhookEvent) {
     // ignore non-text-message event
     return Promise.resolve(null)
   }
-  console.log(`Received message: ${event.message.text}`)
+  console.log(JSON.stringify(event))
   // create a echoing text message
 
-  const echo: Message | undefined = await handleReply(event.message.text)
+  const echo: Message | undefined = await handleReply(event)
 
   // use reply API
   if (!echo) return Promise.resolve(null)
