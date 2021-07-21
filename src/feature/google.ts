@@ -10,7 +10,7 @@ export default async function google(
   message: string
 ): Promise<TextMessage | undefined> {
   const reg = /^((google search)|(!google))/gi
-  if (!reg.test(message)) {
+  if (!reg.test(message.toLowerCase())) {
     return undefined
   }
 

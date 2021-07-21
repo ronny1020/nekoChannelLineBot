@@ -9,8 +9,8 @@ import {
 export default async function youtube(
   message: string
 ): Promise<TextMessage | undefined> {
-  const reg = /^((youtube search)|(!youtube))/i
-  if (!reg.test(message)) {
+  const reg = /^((youtube search))/i
+  if (!reg.test(message.toLowerCase())) {
     return undefined
   }
 

@@ -27,7 +27,7 @@ export default async function meme(
   if (message.startsWith('新增')) {
     if (message.includes('http')) {
       const extension = filenameExtensionList.find((item) =>
-        message.includes(item)
+        message.toLowerCase().includes(item)
       )
 
       if (extension) {

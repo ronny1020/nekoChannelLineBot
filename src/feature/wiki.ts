@@ -10,7 +10,7 @@ export default async function wiki(
 ): Promise<TextMessage | undefined> {
   const reg = /^!?wiki/i
 
-  if (!reg.test(message)) {
+  if (!reg.test(message.toLowerCase())) {
     return undefined
   }
 

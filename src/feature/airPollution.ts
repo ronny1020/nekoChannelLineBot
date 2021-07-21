@@ -14,7 +14,7 @@ export default async function airPollution(
   let locationKey: 'taipei' | 'tainan'
 
   let cityName = ''
-  switch (message) {
+  switch (message.toLowerCase()) {
     case 'air pollution':
     case '空汙':
     case '台北空汙':

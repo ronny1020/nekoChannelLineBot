@@ -12,7 +12,7 @@ export default async function weather(
 
   let city = ''
   let cityName = ''
-  switch (message) {
+  switch (message.toLowerCase()) {
     case 'weather':
     case '天氣':
     case '台北天氣':

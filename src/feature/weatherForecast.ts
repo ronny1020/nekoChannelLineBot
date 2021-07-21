@@ -44,7 +44,7 @@ export default async function weatherForecast(
   let cityName = ''
   let locationKey: 'taipei' | 'tainan'
 
-  switch (message) {
+  switch (message.toLowerCase()) {
     case 'weather forecast':
     case '天氣預報':
     case '台北天氣預報':

@@ -10,7 +10,7 @@ export default async function postImage(
 
   if (message.includes('http') && !message.startsWith('新增')) {
     const extension = filenameExtensionList.find((item) =>
-      message.includes(item)
+      message.toLowerCase().includes(item)
     )
 
     if (extension) {

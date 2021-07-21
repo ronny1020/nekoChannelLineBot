@@ -17,7 +17,7 @@ import help from './feature/help'
 export default async function handleReply(
   originalMessage: string
 ): Promise<Message | undefined> {
-  const message = originalMessage.trim().toLowerCase()
+  const message = originalMessage.trim()
 
   return (
     (await stockPrice(message)) ||

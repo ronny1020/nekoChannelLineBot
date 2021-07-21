@@ -60,7 +60,9 @@ async function getArticleUrlList(pageNumber: number): Promise<string[]> {
 export default async function pttBeauty(
   message: string
 ): Promise<FlexMessage | TextMessage | undefined> {
-  if (message === 'ptt表特' || message === 'ptt beauty') {
+  const lowerCassMessage = message.toLowerCase()
+
+  if (lowerCassMessage === 'ptt表特' || lowerCassMessage === 'ptt beauty') {
     let pageNumber = 1 + Math.round(Math.random() * 100)
 
     let articleUrlList = await getArticleUrlList(pageNumber)
