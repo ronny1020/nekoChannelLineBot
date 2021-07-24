@@ -8,6 +8,7 @@
     "dev": "nodemon",
     "build": "tsc",
     "test": "jest",
+    "coverage": "jest --coverage --coverageReporters='json-summary'",
     "lint": "eslint src/** --fix",
     "postinstall": "husky install",
     "prepare": "husky install",
