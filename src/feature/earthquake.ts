@@ -1,6 +1,6 @@
 import { ImageMessage } from '@line/bot-sdk'
-import puppeteer from 'puppeteer'
 import { createImageMessage } from '../tool/createMessage'
+import { createPageToBrowser } from '../tool/puppeteerTool'
 
 export default async function earthquake(
   message: string
@@ -9,11 +9,7 @@ export default async function earthquake(
     const domain = 'https://www.cwb.gov.tw'
     const url = `${domain}/V8/C/E/index.html`
 
-    const browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    })
-
-    const page = await browser.newPage()
+    const page = await createPageToBrowser()
     await page.goto(url)
     await page.waitForSelector('.eq-infor>a')
 
@@ -30,7 +26,7 @@ export default async function earthquake(
       document.querySelector('.cube-wrap')?.getAttribute('href')
     )
 
-    await browser.close()
+    await page.close()
 
     lastEarthquakeInfoImageUrl = `${domain}${lastEarthquakeInfoImageUrl}`
 

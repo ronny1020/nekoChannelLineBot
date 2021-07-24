@@ -1,7 +1,7 @@
 import { TextMessage } from '@line/bot-sdk'
 import { createTextMessage } from '../tool/createMessage'
 import {
-  createBrowser,
+  createPageToBrowser,
   getTextArrayBySelector,
   getLinkArrayBySelector,
 } from '../tool/puppeteerTool'
@@ -20,8 +20,7 @@ export default async function youtube(
     keyword
   )}`
 
-  const browser = await createBrowser()
-  const page = await browser.newPage()
+  const page = await createPageToBrowser()
   try {
     page.setDefaultTimeout(10000)
     await page.goto(url)
@@ -33,7 +32,7 @@ export default async function youtube(
     const titles = await getTextArrayBySelector(page, '#video-title')
     const links = await getLinkArrayBySelector(page, '#video-title')
 
-    browser.close()
+    page.close()
 
     return createTextMessage(
       titles
@@ -49,7 +48,7 @@ export default async function youtube(
   } catch (error) {
     console.error(error)
 
-    browser.close()
+    page.close()
     return createTextMessage(`無${keyword}資訊`)
   }
 }

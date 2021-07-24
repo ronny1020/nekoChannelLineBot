@@ -5,6 +5,7 @@ import handleEvent, { config } from './handleEvent'
 import testForDev from './testForDev'
 import { typeDefs, resolvers } from './GraphQL'
 import connectToMongo from './mongo'
+import { openBrowser } from './tool/puppeteerTool'
 
 const app = express()
 
@@ -13,6 +14,11 @@ const server = new ApolloServer({
   resolvers,
   introspection: true,
 })
+
+async function startApolloServer() {
+  await server.start()
+  server.applyMiddleware({ app })
+}
 
 app.post('/callback', middleware(<MiddlewareConfig>config), (req, res) => {
   Promise.all(req.body.events.map(handleEvent))
@@ -24,16 +30,12 @@ app.post('/callback', middleware(<MiddlewareConfig>config), (req, res) => {
 })
 
 async function init() {
-  // listen on port
   const port = process.env.PORT || 3000
   app.listen(port, () => {
     console.log(`listening on ${port}`)
   })
 
-  await server.start()
-  server.applyMiddleware({ app })
-
-  await connectToMongo()
+  await Promise.all([startApolloServer(), connectToMongo(), openBrowser()])
 
   testForDev()
 }

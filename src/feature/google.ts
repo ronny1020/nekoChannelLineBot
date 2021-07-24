@@ -1,9 +1,9 @@
 import { TextMessage } from '@line/bot-sdk'
 import { createTextMessage } from '../tool/createMessage'
 import {
-  createBrowser,
   getTextArrayBySelector,
   getLinkArrayBySelector,
+  createPageToBrowser,
 } from '../tool/puppeteerTool'
 
 export default async function google(
@@ -18,8 +18,7 @@ export default async function google(
 
   const url = `https://www.google.com.tw/search?q=${encodeURI(keyword)}`
 
-  const browser = await createBrowser()
-  const page = await browser.newPage()
+  const page = await createPageToBrowser()
   try {
     page.setDefaultTimeout(10000)
     await page.goto(url)
@@ -32,7 +31,7 @@ export default async function google(
     const links = await getLinkArrayBySelector(page, '.yuRUbf>a')
     const descriptions = await getTextArrayBySelector(page, 'span.aCOpRe>span')
 
-    browser.close()
+    page.close()
     return createTextMessage(
       titles
         .map(
@@ -44,7 +43,7 @@ export default async function google(
   } catch (error) {
     console.error(error)
 
-    browser.close()
+    page.close()
     return createTextMessage(`無${keyword}資訊`)
   }
 }

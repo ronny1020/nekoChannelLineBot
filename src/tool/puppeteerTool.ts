@@ -1,4 +1,18 @@
-import puppeteer from 'puppeteer'
+import puppeteer, { Browser } from 'puppeteer'
+
+let puppeteerBrowser: Browser
+
+export async function openBrowser() {
+  puppeteerBrowser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  })
+
+  console.log('Puppeteer browser is open')
+}
+
+export async function createPageToBrowser() {
+  return puppeteerBrowser.newPage()
+}
 
 export async function getTextBySelector(
   page: puppeteer.Page,
@@ -26,10 +40,4 @@ export async function getLinkArrayBySelector(
     elements.map((element) => element.getAttribute('href'))
   )
   return text
-}
-
-export async function createBrowser() {
-  return puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  })
 }

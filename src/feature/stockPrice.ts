@@ -1,7 +1,7 @@
 import { FlexMessage, TextMessage } from '@line/bot-sdk'
 import { createBubbleFlexTextMessage } from '../tool/createFlexTextMessage'
 import { createTextMessage } from '../tool/createMessage'
-import { createBrowser, getTextBySelector } from '../tool/puppeteerTool'
+import { createPageToBrowser, getTextBySelector } from '../tool/puppeteerTool'
 
 export default async function stockPrice(
   message: string
@@ -9,8 +9,8 @@ export default async function stockPrice(
   if (message.endsWith('股價')) {
     const url = `https://www.google.com.tw/search?q=${encodeURI(message)}`
 
-    const browser = await createBrowser()
-    const page = await browser.newPage()
+    const page = await createPageToBrowser()
+
     try {
       page.setDefaultTimeout(10000)
       await page.goto(url)
@@ -47,7 +47,7 @@ export default async function stockPrice(
         elements.map((element) => element.textContent)
       )
 
-      browser.close()
+      page.close()
 
       let stockColor
       if (stockRate?.startsWith('+')) stockColor = '#dc3545'
@@ -119,7 +119,7 @@ export default async function stockPrice(
     } catch (error) {
       console.error(error)
 
-      browser.close()
+      page.close()
       return createTextMessage(`無${message.replace(' ', '')}資訊`)
     }
   }
