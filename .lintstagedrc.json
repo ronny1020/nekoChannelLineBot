@@ -1,3 +1,7 @@
 {
-  "src/**/*.{js,ts}": ["eslint --fix"]
+  "src/**/*.{js,ts}": [
+    "eslint --fix",
+    "jest --bail --findRelatedTests",
+    "git add"
+  ]
 }
