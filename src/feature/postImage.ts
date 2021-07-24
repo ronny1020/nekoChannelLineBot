@@ -3,21 +3,30 @@ import checkImageType from '../tool/checkImageType'
 import createAnimatedImageMessage from '../tool/createAnimatedImageMessage'
 import { createTextMessage } from '../tool/createMessage'
 
+const filenameExtensionList: string[] = ['.png', '.jpg', '.jpeg', '.gif']
+
+export function findImageUrlFromText(text: string): string {
+  const regex = /(https?:\/\/[^\s]+\.(?:png|jpg|jpeg|gif))/g
+  const match = text.match(regex)
+
+  return match ? match[0] : ''
+}
+
+export function findImageExtensionForText(text: string): string {
+  return (
+    filenameExtensionList.find((item) => text.toLowerCase().includes(item)) ||
+    ''
+  )
+}
+
 export default async function postImage(
   message: string
 ): Promise<TextMessage | ImageMessage | FlexMessage | undefined> {
-  const filenameExtensionList: string[] = ['jpg', 'jpeg', 'png', 'gif']
-
   if (message.includes('http') && !message.startsWith('新增')) {
-    const extension = filenameExtensionList.find((item) =>
-      message.toLowerCase().includes(item)
-    )
+    const extension = findImageExtensionForText(message)
 
     if (extension) {
-      const imageUrl = message.substring(
-        message.indexOf('http'),
-        message.lastIndexOf(extension) + extension.length
-      )
+      const imageUrl = findImageUrlFromText(message)
 
       const imageType = await checkImageType(imageUrl, extension)
       if (typeof imageType === 'string') return createTextMessage(imageType)
