@@ -27,9 +27,13 @@ export default async function google(
 
     // await page.screenshot({ path: `screenshots.jpeg` })
 
-    const titles = await getTextArrayBySelector(page, 'h3.LC20lb.DKV0Md')
-    const links = await getLinkArrayBySelector(page, '.yuRUbf>a')
-    const descriptions = await getTextArrayBySelector(page, 'span.aCOpRe>span')
+    const [titles, links, descriptions] = await Promise.all([
+      getTextArrayBySelector(page, 'h3.LC20lb.DKV0Md'),
+      getLinkArrayBySelector(page, '.yuRUbf>a'),
+      getTextArrayBySelector(page, '.VwiC3b'),
+    ])
+
+    titles.length = 3
 
     page.close()
     return createTextMessage(
