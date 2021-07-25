@@ -24,28 +24,33 @@ export default async function stockPrice(
       stockName =
         stockName?.replace(textToRemove, '').replace('>', '').trim() || ' '
 
-      const stockCode = await getTextBySelector(page, '.HfMth')
-      const stockCurrentPrice = await getTextBySelector(page, '.IsqQVc')
-      const stockCurrency = await getTextBySelector(page, '.knFDje')
-      const stockRate = await getTextBySelector(page, '.WlRRw')
-      const updatedTime = await getTextBySelector(
-        page,
-        '.TgMHGc > span:nth-child(2)'
-      )
-
       const [
-        stockOpen,
-        stockHight,
-        stockLow,
-        stockMktCap,
-        stockPERatio,
-        stockDivYield,
-        PrevClose,
-        stock52wkHight,
-        stock52wkLow,
-      ] = await page.$$eval('.iyjjgb', (elements) =>
-        elements.map((element) => element.textContent)
-      )
+        stockCode,
+        stockCurrentPrice,
+        stockCurrency,
+        stockRate,
+        updatedTime,
+        [
+          stockOpen,
+          stockHight,
+          stockLow,
+          stockMktCap,
+          stockPERatio,
+          stockDivYield,
+          PrevClose,
+          stock52wkHight,
+          stock52wkLow,
+        ],
+      ] = await Promise.all([
+        getTextBySelector(page, '.HfMth'),
+        getTextBySelector(page, '.IsqQVc'),
+        getTextBySelector(page, '.knFDje'),
+        getTextBySelector(page, '.WlRRw'),
+        getTextBySelector(page, '.TgMHGc > span:nth-child(2)'),
+        page.$$eval('.iyjjgb', (elements) =>
+          elements.map((element) => element.textContent)
+        ),
+      ])
 
       page.close()
 
