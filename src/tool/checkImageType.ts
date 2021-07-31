@@ -14,10 +14,15 @@ export default async function checkImageType(
       method: 'get',
     })
 
+    if (data.includes('acTL') && headers['content-length'] * 1 > 300000) {
+      return `檔案 APNG 大小 ${headers['content-length']} 過大，超過限制 300000。`
+    }
+
+    if (extension === 'gif' && headers['content-length'] * 1 > 10000000) {
+      return `檔案 GIF 大小 ${headers['content-length']} 過大，超過限制 10000000。`
+    }
+
     if (data.includes('acTL') || extension === 'gif') {
-      if (headers['content-length'] * 1 > 300000) {
-        return `檔案大小 ${headers['content-length']} 過大，超過限制 300000。`
-      }
       imageType.animated = true
 
       const buffer = Buffer.from(data, 'binary')
