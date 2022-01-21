@@ -41,6 +41,9 @@ export default async function weatherForecast(
     return undefined
   }
 
+  if (message !== 'weather forecast' && !message.match(/天氣預報$/)) {
+    return undefined
+  }
   const cityName = message.replace(/天氣預報/, '')
   const city =
     weatherCityList.find((item) => item.name === cityName) || weatherCityList[0]

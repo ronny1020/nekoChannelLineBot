@@ -11,6 +11,9 @@ export default async function weather(
     return undefined
   }
 
+  if (message !== 'weather' && !message.match(/天氣$/)) {
+    return undefined
+  }
   const cityName = message.replace(/天氣/, '')
   const city =
     weatherCityList.find((item) => item.name === cityName) || weatherCityList[0]
