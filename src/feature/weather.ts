@@ -2,6 +2,7 @@ import axios from 'axios'
 import { TextMessage, FlexMessage } from '@line/bot-sdk'
 import { createBubbleFlexTextMessage } from '../tool/createFlexTextMessage'
 import { WeatherData } from '../interface/weather'
+import weatherCityList from '../data/weatherCityList'
 
 export default async function weather(
   message: string
@@ -10,30 +11,17 @@ export default async function weather(
     return undefined
   }
 
-  let city = ''
-  let cityName = ''
-  switch (message.toLowerCase()) {
-    case 'weather':
-    case '天氣':
-    case '台北天氣':
-      city = 'Taipei'
-      cityName = '台北'
-      break
-    case '台南天氣':
-      city = 'Tainan'
-      cityName = '台南'
-      break
-    default:
-      return undefined
-  }
+  const cityName = message.replace(/天氣/, '')
+  const city =
+    weatherCityList.find((item) => item.name === cityName) || weatherCityList[0]
 
   const { data } = (await axios.get(
-    `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.OPEN_WEATHER_API_KEY}&lang=zh_tw&units=metric`
+    `http://api.openweathermap.org/data/2.5/weather?q=${city.key}&appid=${process.env.OPEN_WEATHER_API_KEY}&lang=zh_tw&units=metric`
   )) as { data: WeatherData }
 
   return createBubbleFlexTextMessage(
     {
-      title: `${cityName}天氣`,
+      title: `${city.name}天氣`,
       subTitle: data.weather[0].description,
       contents: [
         { key: '現在溫度', value: `${data.main.temp} 度` },
@@ -48,6 +36,6 @@ export default async function weather(
         { key: '能見度', value: `${data.visibility} 公尺` },
       ],
     },
-    `${cityName}天氣`
+    `${city.name}天氣`
   )
 }

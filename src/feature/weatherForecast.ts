@@ -2,8 +2,8 @@ import axios from 'axios'
 import { TextMessage, FlexMessage } from '@line/bot-sdk'
 import moment from 'moment'
 import { ForecastData } from '../interface/weather'
-import { locationMapping } from '../tool/location'
 import { createCarouselFlexTextMessage } from '../tool/createFlexTextMessage'
+import weatherCityList from '../data/weatherCityList'
 
 function uviLevel(uvi: number) {
   if (uvi < 3) return '低量'
@@ -41,30 +41,14 @@ export default async function weatherForecast(
     return undefined
   }
 
-  let cityName = ''
-  let locationKey: 'taipei' | 'tainan'
-
-  switch (message.toLowerCase()) {
-    case 'weather forecast':
-    case '天氣預報':
-    case '台北天氣預報':
-      locationKey = 'taipei'
-      cityName = '台北'
-      break
-    case '台南天氣預報':
-      locationKey = 'tainan'
-      cityName = '台南'
-      break
-    default:
-      return undefined
-  }
-
-  const { lat, lon } = locationMapping[locationKey]
+  const cityName = message.replace(/天氣預報/, '')
+  const city =
+    weatherCityList.find((item) => item.name === cityName) || weatherCityList[0]
 
   const {
     data: { daily },
   } = (await axios.get(
-    `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${process.env.OPEN_WEATHER_API_KEY}&lang=zh_tw&units=metric`
+    `https://api.openweathermap.org/data/2.5/onecall?lat=${city.lat}&lon=${city.lon}&appid=${process.env.OPEN_WEATHER_API_KEY}&lang=zh_tw&units=metric`
   )) as { data: ForecastData }
 
   return createCarouselFlexTextMessage(
@@ -125,9 +109,9 @@ export default async function weatherForecast(
           ).format('HH:mm:ss')}`,
         },
         'separator',
-        { key: ' ', value: cityName },
+        { key: ' ', value: city.name },
       ],
     })),
-    `${cityName}天氣預報`
+    `${city.name}天氣預報`
   )
 }
