@@ -2,19 +2,36 @@
   "name": "neko-channel-line-bot",
   "version": "1.0.0",
   "description": "",
+  "license": "ISC",
+  "author": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node -r tsconfig-paths/register ./src/index.ts",
-    "dev": "nodemon",
-    "test": "jest",
     "coverage": "jest --coverage --coverageReporters='json-summary'",
-    "lint": "eslint src/** --fix",
+    "dev": "nodemon",
     "postinstall": "husky install",
+    "lint": "eslint src/** --fix",
+    "pre-commit": "lint-staged",
     "prepare": "husky install",
-    "pre-commit": "lint-staged"
+    "start": "ts-node -r tsconfig-paths/register ./src/index.ts",
+    "test": "jest"
   },
-  "author": "",
-  "license": "ISC",
+  "dependencies": {
+    "@line/bot-sdk": "^7.3.0",
+    "apollo-server-express": "^3.0.1",
+    "axios": "^0.21.2",
+    "cheerio": "^1.0.0-rc.10",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.5.1",
+    "image-size": "^1.0.0",
+    "moment": "^2.29.1",
+    "mongoose": "^5.13.3",
+    "prompts": "^2.4.1",
+    "puppeteer": "^10.1.0",
+    "ts-node": "^10.1.0",
+    "tsconfig-paths": "^3.12.0"
+  },
   "devDependencies": {
     "@types/cheerio": "^0.22.30",
     "@types/express": "^4.17.13",
@@ -36,23 +53,6 @@
     "prettier": "^2.3.2",
     "pretty-quick": "^3.1.1",
     "ts-jest": "^27.0.4",
-    "ts-node": "^10.1.0",
-    "tsconfig-paths": "^3.12.0",
     "typescript": "^4.3.5"
-  },
-  "dependencies": {
-    "@line/bot-sdk": "^7.3.0",
-    "apollo-server-express": "^3.0.1",
-    "axios": "^0.21.2",
-    "cheerio": "^1.0.0-rc.10",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "express-graphql": "^0.12.0",
-    "graphql": "^15.5.1",
-    "image-size": "^1.0.0",
-    "moment": "^2.29.1",
-    "mongoose": "^5.13.3",
-    "prompts": "^2.4.1",
-    "puppeteer": "^10.1.0"
   }
 }
