@@ -1,6 +1,6 @@
-import axios, { AxiosResponse } from 'axios'
 import { TextMessage } from '@line/bot-sdk'
 import { createTextMessage } from '@utility/services/line/createMessage'
+import axios, { AxiosResponse } from 'axios'
 
 export default async function translate(
   message: string

@@ -1,6 +1,5 @@
 import { ImageMessage } from '@line/bot-sdk'
 import { createImageMessage } from '@utility/services/line/createMessage'
-
 import { createPageToBrowser } from '@utility/services/puppeteer/puppeteerTool'
 
 export default async function earthquake(

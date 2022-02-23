@@ -1,6 +1,6 @@
 import { FlexMessage, ImageMessage } from '@line/bot-sdk'
-import { MemeSize } from '../../../modules/meme/interfaces/meme'
 import { createFlexMessage, createImageMessage } from './createMessage'
+import { MemeSize } from '../../../modules/meme/interfaces/meme'
 
 export default function createAnimatedImageMessage(
   imageUrl: string,

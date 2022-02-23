@@ -1,5 +1,3 @@
-import axios from 'axios'
-
 import {
   FlexBubble,
   FlexCarousel,
@@ -10,6 +8,7 @@ import {
   createTextMessage,
   createFlexMessage,
 } from '@utility/services/line/createMessage'
+import axios from 'axios'
 
 async function getPageDataFromPttUrl(url: string): Promise<string | null> {
   try {

@@ -1,6 +1,5 @@
 import { TextMessage } from '@line/bot-sdk'
 import { createTextMessage } from '@utility/services/line/createMessage'
-
 import getLinkArrayBySelector from '@utility/services/puppeteer/getLinkArrayBySelector'
 import getTextArrayBySelector from '@utility/services/puppeteer/getTextArrayBySelector'
 import { createPageToBrowser } from '@utility/services/puppeteer/puppeteerTool'

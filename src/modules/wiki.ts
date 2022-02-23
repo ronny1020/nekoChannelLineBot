@@ -1,7 +1,7 @@
-import axios from 'axios'
-import cheerio from 'cheerio'
 import { TextMessage } from '@line/bot-sdk'
 import { createTextMessage } from '@utility/services/line/createMessage'
+import axios from 'axios'
+import cheerio from 'cheerio'
 
 export default async function wiki(
   message: string
