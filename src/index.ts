@@ -1,11 +1,11 @@
 import { middleware, MiddlewareConfig } from '@line/bot-sdk'
 import express from 'express'
 import { ApolloServer } from 'apollo-server-express'
+import { openBrowser } from '@utility/services/puppeteer/puppeteerTool'
 import handleEvent, { config } from './handleEvent'
 import testForDev from './testForDev'
-import { typeDefs, resolvers } from './GraphQL'
-import connectToMongo from './mongo'
-import { openBrowser } from './tool/puppeteerTool'
+import { typeDefs, resolvers } from './utility/services/graphQl/GraphQL'
+import connectToMongo from './utility/services/mongo/mongo'
 
 const app = express()
 
