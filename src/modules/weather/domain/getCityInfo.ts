@@ -1,6 +1,11 @@
-import { WeatherCity } from '../interfaces/weather'
+interface CityInfo {
+  key: string
+  name: string
+  lon: number
+  lat: number
+}
 
-export default [
+const cityInfoList = [
   { key: 'Taipei', name: '台北', lon: 121.5319, lat: 25.0478 },
   { key: 'Changhua', name: '彰化', lon: 119.2175, lat: 30.1683 },
   { key: 'Chiayi', name: '嘉義', lon: 120.4535, lat: 23.4811 },
@@ -19,4 +24,16 @@ export default [
   { key: 'Taoyuan', name: '桃園', lon: 120.6167, lat: 32.2972 },
   { key: 'Yilan', name: '宜蘭', lon: 121.753, lat: 24.757 },
   { key: 'Yunlin', name: '雲林', lon: 120.3848, lat: 23.707 },
-] as WeatherCity[]
+] as CityInfo[]
+
+export default function getCityInfo(keyword?: string): CityInfo | null {
+  if (!keyword) return cityInfoList[0]
+
+  return (
+    cityInfoList.find(
+      (cityInfo) =>
+        cityInfo.key.toLowerCase() === keyword.toLowerCase() ||
+        cityInfo.name === keyword
+    ) || null
+  )
+}

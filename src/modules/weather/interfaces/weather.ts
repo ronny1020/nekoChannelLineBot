@@ -125,10 +125,3 @@ export interface Minutely {
   dt: number
   precipitation: number
 }
-
-export interface WeatherCity {
-  key: string
-  name: string
-  lon: number
-  lat: number
-}

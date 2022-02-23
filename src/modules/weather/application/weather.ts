@@ -1,7 +1,7 @@
 import { TextMessage, FlexMessage } from '@line/bot-sdk'
 import { createBubbleFlexTextMessage } from '@utility/services/line/createFlexTextMessage'
 import axios from 'axios'
-import weatherCityList from '../domain/weatherCityList'
+import getCityInfo from '../domain/getCityInfo'
 import { WeatherData } from '../interfaces/weather'
 
 export default async function weather(
@@ -11,12 +11,17 @@ export default async function weather(
     return undefined
   }
 
-  if (message !== 'weather' && !message.match(/天氣$/)) {
+  if (!message.endsWith('天氣') && !message.endsWith('weather')) {
     return undefined
   }
-  const cityName = message.replace(/天氣/, '')
-  const city =
-    weatherCityList.find((item) => item.name === cityName) || weatherCityList[0]
+
+  const cityName = message.replace(/天氣|weather/, '').trim()
+
+  const city = getCityInfo(cityName)
+
+  if (!city) {
+    return undefined
+  }
 
   const { data } = (await axios.get(
     `http://api.openweathermap.org/data/2.5/weather?q=${city.key}&appid=${process.env.OPEN_WEATHER_API_KEY}&lang=zh_tw&units=metric`

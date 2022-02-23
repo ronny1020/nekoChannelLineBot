@@ -2,7 +2,7 @@ import { TextMessage, FlexMessage } from '@line/bot-sdk'
 import { createCarouselFlexTextMessage } from '@utility/services/line/createFlexTextMessage'
 import axios from 'axios'
 import moment from 'moment'
-import weatherCityList from '../domain/weatherCityList'
+import getCityInfo from '../domain/getCityInfo'
 import { ForecastData } from '../interfaces/weather'
 
 function uviLevel(uvi: number) {
@@ -41,12 +41,17 @@ export default async function weatherForecast(
     return undefined
   }
 
-  if (message !== 'weather forecast' && !message.match(/天氣預報$/)) {
+  if (!message.endsWith('天氣預報') && !message.endsWith('forecast')) {
     return undefined
   }
-  const cityName = message.replace(/天氣預報/, '')
-  const city =
-    weatherCityList.find((item) => item.name === cityName) || weatherCityList[0]
+
+  const cityName = message.replace(/天氣預報|weather|forecast/g, '').trim()
+
+  const city = getCityInfo(cityName)
+
+  if (!city) {
+    return undefined
+  }
 
   const {
     data: { daily },

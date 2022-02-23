@@ -1,8 +1,16 @@
 import { TextMessage, FlexMessage } from '@line/bot-sdk'
 import { createBubbleFlexTextMessage } from '@utility/services/line/createFlexTextMessage'
 import axios from 'axios'
-import { locationMapping } from '../domain/location'
-import { AirPollutionData } from '../interfaces/airPollution'
+import { AirPollutionData } from 'modules/weather/interfaces/airPollution'
+import getCityInfo from '../domain/getCityInfo'
+
+const pollutionLevel = {
+  '1': 'Good',
+  '2': 'Fair',
+  '3': 'Moderate',
+  '4': 'Poor',
+  '5': 'Very Poor',
+}
 
 export default async function airPollution(
   message: string
@@ -11,33 +19,23 @@ export default async function airPollution(
     return undefined
   }
 
-  let locationKey: 'taipei' | 'tainan'
-
-  let cityName = ''
-  switch (message.toLowerCase()) {
-    case 'air pollution':
-    case '空汙':
-    case '台北空汙':
-      locationKey = 'taipei'
-      cityName = '台北'
-      break
-    case '台南空汙':
-      locationKey = 'tainan'
-      cityName = '台南'
-      break
-    default:
-      return undefined
+  if (
+    !message.endsWith('空汙') &&
+    !message.endsWith('空氣汙染') &&
+    !message.endsWith('air pollution')
+  ) {
+    return undefined
   }
 
-  const { lat, lon } = locationMapping[locationKey]
+  const cityName = message.replace(/空汙|空氣汙染|air pollution/, '').trim()
 
-  const pollutionLevel = {
-    '1': 'Good',
-    '2': 'Fair',
-    '3': 'Moderate',
-    '4': 'Poor',
-    '5': 'Very Poor',
+  const city = getCityInfo(cityName)
+
+  if (!city) {
+    return undefined
   }
+
+  const { lat, lon } = city
 
   const { data } = (await axios.get(
     `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${process.env.OPEN_WEATHER_API_KEY}&lang=zh_tw&units=metric`
