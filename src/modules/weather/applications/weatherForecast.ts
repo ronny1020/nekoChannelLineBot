@@ -2,6 +2,7 @@ import { TextMessage, FlexMessage } from '@line/bot-sdk'
 import { createCarouselFlexTextMessage } from '@utility/services/line/createFlexTextMessage'
 import moment from 'moment'
 import getCityInfo from '../domain/getCityInfo'
+import getMoonStateByPhase from '../domain/getMoonStateByPhase'
 import getUviLevelName from '../domain/getUviLevelName'
 import getWindDirection from '../domain/getWindDirection'
 import getForecastFromApi from '../services/OpenWeatherMapApi/getForecastFromApi'
@@ -79,7 +80,12 @@ export default async function weatherForecast(
         },
         { key: '大氣壓力', value: `${day.pressure} mb` },
         { key: '相對濕度', value: `${day.humidity} %` },
-        { key: '月像', value: `${(day.moon_phase * 100).toFixed()} %` },
+        {
+          key: '月像',
+          value: `${day.moon_phase.toFixed(2)} ${getMoonStateByPhase(
+            day.moon_phase
+          )}`,
+        },
         {
           key: '日出/日落',
           value: `${moment(day.sunrise * 1000).format('HH:mm:ss')} / ${moment(
