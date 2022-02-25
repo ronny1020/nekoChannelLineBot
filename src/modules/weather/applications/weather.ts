@@ -1,8 +1,7 @@
 import { TextMessage, FlexMessage } from '@line/bot-sdk'
 import { createBubbleFlexTextMessage } from '@utility/services/line/createFlexTextMessage'
-import axios from 'axios'
 import getCityInfo from '../domain/getCityInfo'
-import { WeatherData } from '../interfaces/weather'
+import getWeatherInfoFromApi from '../services/OpenWeatherMapApi/getWeatherInfoFromApi'
 
 export default async function weather(
   message: string
@@ -23,9 +22,7 @@ export default async function weather(
     return undefined
   }
 
-  const { data } = (await axios.get(
-    `http://api.openweathermap.org/data/2.5/weather?q=${city.key}&appid=${process.env.OPEN_WEATHER_API_KEY}&lang=zh_tw&units=metric`
-  )) as { data: WeatherData }
+  const data = await getWeatherInfoFromApi(city.key)
 
   return createBubbleFlexTextMessage(
     {

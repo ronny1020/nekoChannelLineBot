@@ -1,38 +1,10 @@
 import { TextMessage, FlexMessage } from '@line/bot-sdk'
 import { createCarouselFlexTextMessage } from '@utility/services/line/createFlexTextMessage'
-import axios from 'axios'
 import moment from 'moment'
 import getCityInfo from '../domain/getCityInfo'
-import { ForecastData } from '../interfaces/weather'
-
-function uviLevel(uvi: number) {
-  if (uvi < 3) return '低量'
-  if (uvi < 6) return '中量'
-  if (uvi < 8) return '高量'
-  if (uvi < 11) return '過量'
-  return '危險'
-}
-
-function getWindDirection(wind_deg: number) {
-  const windDegreePercentage = wind_deg / 360
-  if (windDegreePercentage < 1 / 32) return '北'
-  if (windDegreePercentage < 3 / 32) return '北北東'
-  if (windDegreePercentage < 5 / 32) return '東北'
-  if (windDegreePercentage < 7 / 32) return '東北東'
-  if (windDegreePercentage < 9 / 32) return '東'
-  if (windDegreePercentage < 11 / 32) return '東南東'
-  if (windDegreePercentage < 13 / 32) return '東南'
-  if (windDegreePercentage < 15 / 32) return '南南東'
-  if (windDegreePercentage < 17 / 32) return '南東'
-  if (windDegreePercentage < 19 / 32) return '南'
-  if (windDegreePercentage < 21 / 32) return '南南西'
-  if (windDegreePercentage < 23 / 32) return '西南'
-  if (windDegreePercentage < 25 / 32) return '西南西'
-  if (windDegreePercentage < 27 / 32) return '西'
-  if (windDegreePercentage < 29 / 32) return '西北西'
-  if (windDegreePercentage < 31 / 32) return '西北'
-  return '北'
-}
+import getUviLevelName from '../domain/getUviLevelName'
+import getWindDirection from '../domain/getWindDirection'
+import getForecastFromApi from '../services/OpenWeatherMapApi/getForecastFromApi'
 
 export default async function weatherForecast(
   message: string
@@ -53,11 +25,9 @@ export default async function weatherForecast(
     return undefined
   }
 
-  const {
-    data: { daily },
-  } = (await axios.get(
-    `https://api.openweathermap.org/data/2.5/onecall?lat=${city.lat}&lon=${city.lon}&appid=${process.env.OPEN_WEATHER_API_KEY}&lang=zh_tw&units=metric`
-  )) as { data: ForecastData }
+  const { lat, lon } = city
+
+  const daily = await getForecastFromApi(lat, lon)
 
   return createCarouselFlexTextMessage(
     daily.map((day) => ({
@@ -67,7 +37,7 @@ export default async function weatherForecast(
       contents: [
         { key: '降雨機率', value: `${(day.pop * 100).toFixed()} %` },
         { key: '雲量', value: `${day.clouds} %` },
-        { key: '紫外線指數', value: `${day.uvi} ${uviLevel(day.uvi)}` },
+        { key: '紫外線指數', value: `${day.uvi} ${getUviLevelName(day.uvi)}` },
         {
           key: '早晨溫度/體感',
           value: `${day.temp.morn.toFixed(2)} / ${day.feels_like.morn.toFixed(

@@ -1,0 +1,20 @@
+export default function getWindDirection(wind_deg: number) {
+  const windDegreePercentage = wind_deg / 360
+  if (windDegreePercentage < 1 / 32) return '北'
+  if (windDegreePercentage < 3 / 32) return '北北東'
+  if (windDegreePercentage < 5 / 32) return '東北'
+  if (windDegreePercentage < 7 / 32) return '東北東'
+  if (windDegreePercentage < 9 / 32) return '東'
+  if (windDegreePercentage < 11 / 32) return '東南東'
+  if (windDegreePercentage < 13 / 32) return '東南'
+  if (windDegreePercentage < 15 / 32) return '南南東'
+  if (windDegreePercentage < 17 / 32) return '南東'
+  if (windDegreePercentage < 19 / 32) return '南'
+  if (windDegreePercentage < 21 / 32) return '南南西'
+  if (windDegreePercentage < 23 / 32) return '西南'
+  if (windDegreePercentage < 25 / 32) return '西南西'
+  if (windDegreePercentage < 27 / 32) return '西'
+  if (windDegreePercentage < 29 / 32) return '西北西'
+  if (windDegreePercentage < 31 / 32) return '西北'
+  return '北'
+}

@@ -1,8 +1,7 @@
 import { TextMessage, FlexMessage } from '@line/bot-sdk'
 import { createBubbleFlexTextMessage } from '@utility/services/line/createFlexTextMessage'
-import axios from 'axios'
-import { AirPollutionData } from 'modules/weather/interfaces/airPollution'
 import getCityInfo from '../domain/getCityInfo'
+import getAirPollutionFromApi from '../services/OpenWeatherMapApi/getAirPollutionFromApi'
 
 const pollutionLevel = {
   '1': 'Good',
@@ -11,6 +10,8 @@ const pollutionLevel = {
   '4': 'Poor',
   '5': 'Very Poor',
 }
+
+const dataOrder = ['co', 'no', 'no2', 'o3', 'so2', 'pm2_5', 'pm10', 'nh3']
 
 export default async function airPollution(
   message: string
@@ -37,9 +38,7 @@ export default async function airPollution(
 
   const { lat, lon } = city
 
-  const { data } = (await axios.get(
-    `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${process.env.OPEN_WEATHER_API_KEY}&lang=zh_tw&units=metric`
-  )) as { data: AirPollutionData }
+  const data = await getAirPollutionFromApi(lat, lon)
 
   const formattedComponents = Object.fromEntries(
     Object.entries(data.list[0].components).map(([key, value]) => [
@@ -47,8 +46,6 @@ export default async function airPollution(
       `${value.toFixed(2)} μg/m3`,
     ])
   )
-
-  const dataOrder = ['co', 'no', 'no2', 'o3', 'so2', 'pm2_5', 'pm10', 'nh3']
 
   return createBubbleFlexTextMessage(
     {
