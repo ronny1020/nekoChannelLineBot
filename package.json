@@ -25,7 +25,7 @@
     "express-graphql": "^0.12.0",
     "graphql": "^15.5.1",
     "image-size": "^1.0.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "mongoose": "^5.13.3",
     "prompts": "^2.4.1",
     "puppeteer": "^10.1.0",
