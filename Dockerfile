@@ -9,6 +9,4 @@ RUN yarn install
 
 COPY . /app
 
-EXPOSE 80
-
 CMD ["yarn", "start"]
