@@ -47,14 +47,13 @@ async function getArticleUrlList(pageNumber: number): Promise<string[]> {
   )
   if (!randomPageData) return []
 
-  let list = randomPageData.match(
+  const list = randomPageData.match(
     /(\/bbs\/Beauty\/)(M\.)([0-9]*)(\.A\.)([A-Z0-9]*)(\.html">\[正妹\])/g
   )
 
   if (!list) return []
 
-  list = list.map((item) => item.substr(12, 18))
-  return list
+  return list.map((item) => item.substr(12, 18))
 }
 
 // main

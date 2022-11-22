@@ -4,10 +4,7 @@ export default async function connectToMongo() {
   const url = process.env.MONGO_DB_URL || ''
 
   await mongoose
-    .connect(url, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
+    .connect(url)
     .then(() => console.log('MongoDB has connected'))
     .catch((e) => console.error(e))
 
