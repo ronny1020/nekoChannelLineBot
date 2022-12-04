@@ -1,21 +1,24 @@
 import puppeteer, { Browser, Page } from 'puppeteer'
 
-let puppeteerBrowser: Browser
+let puppeteerBrowserPromise: Promise<Browser>
 
-export async function openBrowser() {
-  puppeteerBrowser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+export function getPuppeteerBrowser() {
+  if (puppeteerBrowserPromise) return puppeteerBrowserPromise
+
+  puppeteerBrowserPromise = new Promise((resolve) => {
+    resolve(
+      puppeteer.launch({
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      })
+    )
+    console.log('Puppeteer browser is open')
   })
 
-  console.log('Puppeteer browser is open')
+  return puppeteerBrowserPromise
 }
 
-export function createPageToBrowser(): Promise<Page> {
-  if (puppeteerBrowser) return puppeteerBrowser.newPage()
+export async function createPageToBrowser(): Promise<Page> {
+  const puppeteerBrowser = await getPuppeteerBrowser()
 
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(createPageToBrowser())
-    }, 1000)
-  })
+  return puppeteerBrowser.newPage()
 }

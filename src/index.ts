@@ -1,5 +1,4 @@
 import { middleware, MiddlewareConfig } from '@line/bot-sdk'
-import { openBrowser } from '@utility/services/puppeteer/puppeteerTool'
 import { ApolloServer } from 'apollo-server-express'
 import express from 'express'
 import handleEvent, { config } from './handleEvent'
@@ -35,7 +34,7 @@ async function init() {
     console.log(`listening on ${port}`)
   })
 
-  await Promise.all([startApolloServer(), connectToMongo(), openBrowser()])
+  await Promise.all([startApolloServer(), connectToMongo()])
 
   testForDev()
 }
