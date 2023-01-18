@@ -1,10 +1,11 @@
 import { Message, MessageEvent } from '@line/bot-sdk'
-import * as readline from 'readline'
+import { stdin, stdout } from 'process'
+import { createInterface } from 'readline'
 import handleReply from './handleReply'
 
-const readlineInterface = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
+const readlineInterface = createInterface({
+  input: stdin,
+  output: stdout,
 })
 
 export default function testForDev() {

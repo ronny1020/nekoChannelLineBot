@@ -36,7 +36,7 @@ async function init() {
 
   await Promise.all([startApolloServer(), connectToMongo()])
 
-  testForDev()
+  if (process.env.NODE_ENV === 'development') testForDev()
 }
 
 init()
