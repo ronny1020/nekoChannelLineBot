@@ -1,6 +1,7 @@
 import { Message, MessageEvent, TextEventMessage } from '@line/bot-sdk'
 import earthquake from '@modules/earthquake'
 import google from '@modules/google'
+import gpt from '@modules/gpt'
 import help from '@modules/help'
 import meme from '@modules/meme/applications/meme'
 import postImage from '@modules/postImage/applications/postImage'
@@ -18,6 +19,7 @@ export default async function handleReply(
 ): Promise<Message | undefined> {
   const message = event.message as TextEventMessage
   const text: string = message.text.trim()
+  const userId = event.source.userId || ''
 
   return (
     (await stockPrice(text)) ||
@@ -33,6 +35,7 @@ export default async function handleReply(
     (await earthquake(text)) ||
     (await meme(text)) ||
     (await help(text)) ||
+    (await gpt(text, userId)) ||
     undefined
   )
 }
