@@ -1,4 +1,5 @@
 import { Message, MessageEvent, TextEventMessage } from '@line/bot-sdk'
+import bing from '@modules/bing'
 import earthquake from '@modules/earthquake'
 import google from '@modules/google'
 import gpt from '@modules/gpt'
@@ -36,6 +37,7 @@ export default async function handleReply(
     (await meme(text)) ||
     (await help(text)) ||
     (await gpt(text, userId)) ||
+    (await bing(text, userId)) ||
     undefined
   )
 }
