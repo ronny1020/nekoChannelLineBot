@@ -24,7 +24,7 @@ const axiosInstance = axios.create({
 })
 
 const packJson = (data: unknown) => {
-  return `${JSON.stringify(data)}�`
+  return `${JSON.stringify(data)}`
 }
 
 const conversations = {} as {
