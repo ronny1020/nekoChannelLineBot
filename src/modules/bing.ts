@@ -23,9 +23,8 @@ const axiosInstance = axios.create({
   },
 })
 
-// eslint-disable-next-line
-const packJson = (data: Object) => {
-  return `${JSON.stringify(data)}`
+const packJson = (data: unknown) => {
+  return `${JSON.stringify(data)}�`
 }
 
 const conversations = {} as {
