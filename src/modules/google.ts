@@ -18,7 +18,6 @@ export default async function google(
 
   const page = await createPageToBrowser()
   try {
-    page.setDefaultTimeout(10000)
     await page.goto(url)
 
     await page.waitForSelector('#search')
