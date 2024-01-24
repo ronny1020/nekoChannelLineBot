@@ -9,4 +9,6 @@ RUN yarn install
 
 COPY . /app
 
+RUN ${RENDER_GIT_COMMIT} > /app/version.txt
+
 CMD ["yarn", "start"]

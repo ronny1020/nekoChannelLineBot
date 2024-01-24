@@ -27,6 +27,7 @@ export default async function help(
       '台南天氣',
       '!WIKI keyword',
       'WIKI keyword',
+      '!version',
     ].join('\n')
   )
 }
