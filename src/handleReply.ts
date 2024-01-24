@@ -8,6 +8,7 @@ import postImage from '@modules/postImage/applications/postImage'
 import pttBeauty from '@modules/pttBeauty'
 import stockPrice from '@modules/stockPrice'
 import translate from '@modules/translate'
+import version from '@modules/version'
 import airPollution from '@modules/weather/applications/airPollution'
 import weather from '@modules/weather/applications/weather'
 import weatherForecast from '@modules/weather/applications/weatherForecast'
@@ -36,6 +37,7 @@ export default async function handleReply(
     (await meme(text)) ||
     (await help(text)) ||
     (await gpt(text, userId)) ||
+    (await version(text)) ||
     undefined
   )
 }
