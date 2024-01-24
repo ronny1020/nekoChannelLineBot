@@ -38,7 +38,7 @@ export default async function gpt(
     const messageList = messages[key]
     messageList.push({ role: 'user', content: prompt })
     const req = {
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4',
       messages: messageList,
       max_tokens: 1000,
       temperature: 0.7,
