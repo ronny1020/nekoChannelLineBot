@@ -7,5 +7,5 @@ export default async function version(
   if (message.toLowerCase() !== '!version') {
     return undefined
   }
-  return createTextMessage(process.env.RENDER_GIT_COMMIT || 'no version found')
+  return createTextMessage(`https://github.com/ronny1020/nekoChannelLineBot/commit/${process.env.RENDER_GIT_COMMIT}` || 'no version found')
 }
