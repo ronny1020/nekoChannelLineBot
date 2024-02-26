@@ -6,7 +6,7 @@ export default async function earthquake(
   message: string
 ): Promise<ImageMessage | undefined> {
   if (message === '最新地震') {
-    const domain = 'https://www.cwb.gov.tw'
+    const domain = 'https://www.cwa.gov.tw'
     const url = `${domain}/V8/C/E/index.html`
 
     const page = await createPageToBrowser()
